@@ -1,0 +1,11 @@
+#!/usr/bin/perl
+# Author : Siddhartha S Sinha
+# Date   :11/14/2010
+# Purpose : To cleanup the lpp_source(s) to show the correct OS Level
+#
+@LPP_NAME=`ls -l /export/lpp_source|egrep -i 530TL1[0-9]SP[0-9]lpp|awk '{print \$NF}'`;
+while (@LPP_NAME) {
+$LPP_NEW=pop (@LPP_NAME);
+system ("nim -o update -a rm_images=yes -a packages=devices.vtdev.scsi $LPP_NEW");
+system ("nim -o update -a rm_images=yes -a packages=bos.suma $LPP_NEW");
+}

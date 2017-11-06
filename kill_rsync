@@ -1,0 +1,28 @@
+#!/bin/bash
+# Kill all rsync process
+
+KILL_RSYNC () {
+ps -o pgid -aux | grep rsync  | awk '{print $3"\t"$1}' | \
+    sort -htr | awk '{print $2}' | sort -u | \
+    while read RSYNC; do kill -9 -$RSYNC; done
+
+    }
+
+clear
+echo "Kill all running rsync process."
+read -p "$1Do you want to kill all running rsync ? Select ([y]es or [n]o): "
+
+      case $(echo $REPLY | tr '[A-Z]' '[a-z]') in
+          y|yes) KILL_RSYNC ;;
+          *)     echo "You have not selected yes." ;;
+      esac
+
+
+
+
+KILL_RSYNC () {
+ps -o pgid -aux | grep rsync  | awk '{print $3"\t"$1}' | \
+    sort -htr | awk '{print $2}' | sort -u | \
+    while read RSYNC; do kill -9 -$RSYNC; done
+
+    }

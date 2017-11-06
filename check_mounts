@@ -1,0 +1,3 @@
+salt '*' state.apply fs1_mounts
+salt '*' state.apply fs2_mounts
+salt '*' state.apply lisiang_mounts

@@ -1,0 +1,25 @@
+#!/usr/bin/ksh
+# Author : Siddhartha Sinha
+# Date   : 09-16-2009
+#
+tput clear
+printf "%-7s %-10s %-16s %-16s\n" "Device" "Card Type" "Connected Speed" "Connected as"
+printf "%-7s %-10s %-16s %-16s\n" "------" "---------" "---------------" "------------"
+for FIBER_CARD in `lsdev -Cc adapter -l fcs\* -F name`
+do
+STATUS=$(fcstat $FIBER_CARD >/dev/null 2>&1)
+if [ $? -ne 0 ]; then
+STATUS=$(echo "Not Connected")
+SUPPORTED_SPEED=$(echo "N/A")
+CONNECTED_SPEED=$(echo "N/A")
+PORT_TYPE=$(echo "N/A")
+printf "%-7s %-10s %-16s %-16s\n" "$FIBER_CARD" "$SUPPORTED_SPEED" "$CONNECTED_SPEED" "$PORT_TYPE"
+#printf "%-18s %-40s\n" "$FIBER_CARD" "$STATUS"
+else
+SUPPORTED_SPEED=$(fcstat $FIBER_CARD|egrep "Port Speed \(supported\)"|grep -iv err |awk -F":" '{print $2}'|sed 's/ //g')
+CONNECTED_SPEED=$(fcstat $FIBER_CARD|egrep "Port Speed \(running\)"|grep -v error |awk -F":" '{print $2}'|sed 's/ //g')
+PORT_TYPE=$(fcstat $FIBER_CARD|egrep "Port Type"|awk -F":" '{print $2}'|sed 's/ //g')
+printf "%-7s %-10s %-16s %-16s\n" "$FIBER_CARD" "$SUPPORTED_SPEED" "$CONNECTED_SPEED" "$PORT_TYPE"
+fi
+done
+

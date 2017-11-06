@@ -1,0 +1,6 @@
+#!/bin/ksh
+export JAVAHOME=/root/IBMJDK142
+export LPARMONHOME=/root/lparmonv2
+export CLASSPATH=$JAVAHOME/lib/rt.jar:$JAVAHOME/lib/tools.jar:$LPARMONHOME/lparmon.jar:$LPARMONHOME/LAPApp_111405.jar:.
+cd $LPARMONHOME
+$JAVAHOME/jre/bin/java com/ibm/lparmon/LPARMon lparmon.xml

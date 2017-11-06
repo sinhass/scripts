@@ -1,0 +1,8 @@
+#!/usr/bin/ksh
+# This will test the xntpd and if not running it will start
+# Author : Siddhartha S Sinha
+#
+lssrc -s xntpd|grep active >/dev/null 2>&1
+if [ $? -ne 0 ];then
+startsrc -s xntpd >/dev/null 2>&1
+fi

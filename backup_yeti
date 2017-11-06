@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# yeti Backup Only
+HOST_NAME=$(hostname -s)
+if [ "$HOST_NAME" != yeti ]; then
+   echo "Run from yeti"
+   exit 1
+fi
+PATH=/bin:/usr/bin:/usr/sbin:/sbin:/usr/local/bin
+DATE=$(date +%w%d)
+rsync -apv --delete --exclude="var/lib/yum" --exclude="var/lib/check_mk_agent"  --exclude="var/lib/ganglia/rrds/"   --exclude="var/log" --exclude="var/cache" --exclude="var/agentx" --exclude="var/crash" --exclude="var/mail" --exclude="var/spool" --exclude="var/tmp" --exclude="var/lib/jenkins"  --delete-excluded /var /backups/yeti
+rsync -auvp --recursive --delete --exclude-from /tools/barefoot/etc/bigfoot_exclude.txt --delete-excluded /etc /backups/yeti
+rsync -aupv --recursive --delete --exclude="usr/bin" --exclude="usr/games" --exclude="usr/include" --exclude="usr/sbin" --exclude="usr/src" --exclude="usr/src" --exclude="usr/tmp" --exclude="usr/lib" --exclude="usr/share"  --delete-excluded /usr /backups/yeti
+rsync -aupv --recursive --delete --exclude-from /root/yeti_exclude.txt  --delete-excluded /root /backups/yeti

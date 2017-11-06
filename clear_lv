@@ -1,0 +1,49 @@
+#!/bin/ksh
+### Umounts all filesystems from all volume_groups except fromt the 'EXCLUDE'
+### variable, then removes all logical volumes!
+
+EXCLUDE="rootvg"
+filesystem=""
+LVS=""
+
+print "Please wait, finding all Logical Volume(s) in Volume Group(s):"
+
+VGN=`lsvg -o| egrep -v "$EXCLUDE"`
+for i in $VGN; do
+ print "$i"
+ lvs=`lsvg -l $i | egrep -v "$i:" | awk ' /LV NAME / {next} {print $1}'`
+ if [[ -n $lvs ]]; then
+  for j in $lvs; do
+   LVS="$LVS \n$j:"
+  done
+ fi
+done
+
+filesystem=`df -k | awk '{print $7" :"$1}' | sort -t":" -d -r -k1 | sed -es!" "!!g`
+
+for i in `echo $filesystem`; do
+ fsmnt=`echo "$i" | awk -F":" '{print $1}'` 
+ lvd=`echo "$i" | awk -F":" '{print $2}' | awk -F"/" '{print $3}'`
+
+
+ if [[ -n $fsmnt ]]; then
+
+  if [[ -n `echo "$LVS" | egrep "^$lvd:"` ]]; then
+   print "Umount $fsmnt"
+   umount /dev/$lvd
+   if (( $? != 0 )); then
+    print "Failed to unmount $fsmnt!"
+   else
+    rmlv -f $lvd
+    LVS=`echo "$LVS" | egrep -v "^$lvd:"`
+   fi
+  fi
+
+ fi
+done
+
+if [[ -n $LVS ]]; then
+ for j in `echo $LVS | sed -es!":"!!g`; do
+  rmlv -f $j  
+ done
+fi

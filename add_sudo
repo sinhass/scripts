@@ -1,0 +1,79 @@
+#!/bin/bash
+# Author : Siddhartha S Sinha
+
+clear
+blink=$(tput blink)
+offblink=$(tput sgr0)
+reverse=$(tput smso)
+bold=$(tput bold)
+offbold=$(tput rmso)
+COLUMNS=80
+LINES=24
+#TERM=vt320
+export COLUMNS LINES TERM
+
+#
+#
+GetYesNo()	{
+	_ANSWER=
+	if  [ $# -eq 0 ]; then
+	echo "Usage: GetYesNo message" 1>&2
+	exit 1
+	fi
+
+while :
+do
+	if [ "`echo -n`" = "-n" ]; then
+		echo "$@\c"
+		else
+			echo -n "$@"
+	fi
+
+	read _ANSWER
+	case "$_ANSWER" in
+		[yY] | yes | YES | Yes)		return 0 ;;
+		[nN] | no  | NO  | No )		return 1 ;;
+		* ) echo "Please Enter y or n."		 ;;
+	esac
+     tput clear
+done
+}
+
+
+Pause()
+{
+        echo ""
+        echo "Hit Enter to clear the Screen and Continue........"
+        read
+tput clear
+}
+echo "This tool will create Administrative sudo access for the usres."
+echo -n "Please type the user name you want to add sudoers file :"
+read USER_NAME
+echo -n "Please enter the full path of the Server List File : "
+read machine
+for i in `cat $machine`
+do
+ping -c2 $i > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+SERVEROS=`ssh -q $i uname`
+ssh -q $i "ls -l /usr/local/etc/sudoers"  >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+SUDOPATH=/usr/local/etc/sudoers
+else
+SUDOPATH=/etc/sudoers
+fi
+
+ssh -q $i "grep $USER_NAME $SUDOPATH" >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+ssh -q $i "perl -ni -e 'print unless /\Q$USER_NAME\E/'  $SUDOPATH && perl -pi.bk -e 'print qq/$USER_NAME             ALL=(ALL)       NOPASSWD: ALL \n/ if eof;' $SUDOPATH" >/dev/null 2>&1
+echo "Successfully modified sudoers file for $USER_NAME in $i server"
+else
+ssh -q $i "perl -pi.bk -e 'print qq/$USER_NAME             ALL=(ALL)       NOPASSWD: ALL \n/ if eof;' $SUDOPATH" >/dev/null 2>&1			
+echo "Successfully modified sudoers file for $USER_NAME in $i server"
+fi
+else
+echo "Unable to access $i server"
+fi
+done
+ 

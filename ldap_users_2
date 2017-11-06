@@ -1,0 +1,1329 @@
+# extended LDIF
+#
+# LDAPv3
+# base <OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com> with scope subtree
+# filter: (objectClass=*)
+# requesting: mail proxyAddresses samacounts 
+#
+
+# USERS, BAREFOOT, corp.barefootnetworks.com
+dn: OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+
+# TEMP, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: OU=TEMP,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+
+# INTERNS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: OU=INTERNS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+
+# Yumin Xia, INTERNS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Yumin Xia,OU=INTERNS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: yumin.xia@barefootnetworks.com
+mail: yxia@barefootnetworks.com
+
+# Sean Choi, INTERNS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Sean Choi,OU=INTERNS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: schoi@barefootnetworks.com
+
+# CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+
+# Maitreyee Patel, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Maitreyee Patel,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: maitreyeep@barefootnetworks.com
+proxyAddresses: maitreyee.patel@barefootnetworks.com
+mail: mpatel@barefootnetworks.com
+
+# Krunal Joshi, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Krunal Joshi,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: krunalj@barefootnetworks.com
+proxyAddresses: krunal.joshi@barefootnetworks.com
+mail: kjoshi@barefootnetworks.com
+
+# Keval Bhalsod, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Keval Bhalsod,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: kevalb@barefootnetworks.com
+proxyAddresses: keval.bhalsod@barefootnetworks.com
+mail: kbhalsod@barefootnetworks.com
+
+# Himanshu Agarwal, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Himanshu Agarwal,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: himanshua@barefootnetworks.com
+proxyAddresses: himanshu.agarwal@barefootnetworks.com
+mail: hagarwal@barefootnetworks.com
+
+# Arpita Rupareliya, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Arpita Rupareliya,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: arpitar@barefootnetworks.com
+proxyAddresses: arpita.rupareliya@barefootnetworks.com
+mail: arupareliya@barefootnetworks.com
+
+# Shashij Singh, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Shashij Singh,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: shashijs@barefootnetworks.com
+proxyAddresses: shashij.singh@barefootnetworks.com
+mail: shsingh@barefootnetworks.com
+
+# Vimal Gohel, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Vimal Gohel,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: vimalg@barefootnetworks.com
+proxyAddresses: vimal.gohel@barefootnetworks.com
+mail: vgohel@barefootnetworks.com
+
+# Vilesh Shah, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Vilesh Shah,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: vileshs@barefootnetworks.com
+proxyAddresses: vilesh.shah@barefootnetworks.com
+mail: vshah@barefootnetworks.com
+
+# Sunil Thattarakkal, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Sunil Thattarakkal,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: sunil.thattarakkal@barefootnetworks.com
+proxyAddresses: sunilt@barefootnetworks.com
+mail: sthattarakkal@barefootnetworks.com
+
+# Chirag Agarwal, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Chirag Agarwal,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: cagarwal@barefootnetworks.com
+
+# Faisal Haque, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Faisal Haque,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: faisalh@barefootnetworks.com
+proxyAddresses: faisal.haque@barefootnetworks.com
+mail: fhaque@barefootnetworks.com
+
+# Tarun Upadhyay, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Tarun Upadhyay,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: tupadhyay@barefootnetworks.com
+
+# Yash Bhagwat, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Yash Bhagwat,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: ybhagwat@barefootnetworks.com
+
+# Ron Garret, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ron Garret,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: rong@barefootnetworks.com
+proxyAddresses: ron.garret@barefootnetworks.com
+mail: rgarret@barefootnetworks.com
+
+# Suman Kumar, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Suman Kumar,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: sumank@barefootnetworks.com
+proxyAddresses: suman.kumar@barefootnetworks.com
+mail: sukumar@barefootnetworks.com
+
+# Devon Chu, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Devon Chu,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: devonc@barefootnetworks.com
+proxyAddresses: devon@barefootnetworks.com
+proxyAddresses: devon.chu@barefootnetworks.com
+mail: dchu@barefootnetworks.com
+
+# Ryan Briggs, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ryan Briggs,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ryanb@barefootnetworks.com
+proxyAddresses: ryan.briggs@barefootnetworks.com
+mail: rbriggs@barefootnetworks.com
+
+# Jignesh Panwala, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jignesh Panwala,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: jignesh.panwala@barefootnetworks.com
+mail: jpanwala@barefootnetworks.com
+
+# Jibin John, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jibin John,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: jibin.john@barefootnetworks.com
+mail: jjohn@barefootnetworks.com
+
+# Kitsing Mak, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Kitsing Mak,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: kitsingm@barefootnetworks.com
+proxyAddresses: kitsing.mak@barefootnetworks.com
+proxyAddresses: kimak@barefootnetworks.com
+mail: kmak@barefootnetworks.com
+
+# Hiren Gadher, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Hiren Gadher,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: hireng@barefootnetworks.com
+proxyAddresses: hiren.gadher@barefootnetworks.com
+mail: hgadher@barefootnetworks.com
+
+# Gaurang Parmar, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Gaurang Parmar,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: gaurangp@barefootnetworks.com
+proxyAddresses: gaurang.parmar@barefootnetworks.com
+mail: gparmar@barefootnetworks.com
+
+# Donald Pinkus, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Donald Pinkus,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: donaldp@barefootnetworks.com
+proxyAddresses: donald.pinkus@barefootnetworks.com
+mail: dpinkus@barefootnetworks.com
+
+# Dhruv Patel, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Dhruv Patel,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: dhruvp@barefootnetworks.com
+proxyAddresses: dhruv.patel@barefootnetworks.com
+mail: dpatel@barefootnetworks.com
+
+# Purvesh Khona, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Purvesh Khona,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: purveshk@barefootnetworks.com
+proxyAddresses: purvesh.khona@barefootnetworks.com
+mail: pkhona@barefootnetworks.com
+
+# Anil Panchal, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Anil Panchal,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: anilp@barefootnetworks.com
+proxyAddresses: anil.panchal@barefootnetworks.com
+mail: apanchal@barefootnetworks.com
+
+# Vijay Gill, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Vijay Gill,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: vijay.gill@barefootnetworks.com
+mail: vgill@barefootnetworks.com
+
+# Sushma Kumari, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Sushma Kumari,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: sushma.kumari@barefootnetworks.com
+mail: skumari@barefootnetworks.com
+
+# Suruchi Jain, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Suruchi Jain,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: sjain@barefootnetworks.com
+
+# Pankil Patel, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Pankil Patel,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: ppatel@barefootnetworks.com
+
+# Mansi Chhichhia, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Mansi Chhichhia,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: mchhichhia@barefootnetworks.com
+
+# Jin Wang, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jin Wang,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: jwang@barefootnetworks.com
+
+# Indu Dhingra, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Indu Dhingra,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: idhingra@barefootnetworks.com
+
+# Prasanjeet Das, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Prasanjeet Das,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: prasanjeet.das@barefootnetworks.com
+mail: pdas@barefootnetworks.com
+
+# Henry Pechar, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Henry Pechar,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: hpechar@barefootnetworks.com
+
+# Pankaj Khandelwal, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Pankaj Khandelwal,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: pankaj.khandelwal@barefootnetworks.com
+mail: pkhandelwal@barefootnetworks.com
+
+# Harlin  Hamilton, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Harlin  Hamilton,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: hhamilton@barefootnetworks.com
+
+# Anoop Saha, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Anoop Saha,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: asaha@barefootnetworks.com
+
+# Eric Horton, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Eric Horton,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: ehorton@barefootnetworks.com
+
+# Ashok Bikshapathy, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ashok Bikshapathy,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: abikshapathy@barefootnetworks.com
+
+# Shaunak Jani, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Shaunak Jani,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: shaunak.jani@barefootnetworks.com
+mail: sjani@barefootnetworks.com
+
+# Arvind Chopra, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Arvind Chopra,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: achopra@barefootnetworks.com
+
+# Ann Yue, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ann Yue,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: ajue@barefootnetworks.com
+
+# Sailesh Moolya, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Sailesh Moolya,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: smoolya@barefootnetworks.com
+
+# Ali Farhangi, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ali Farhangi,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: afarhangi@barefootnetworks.com
+
+# Vismay Shah, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Vismay Shah,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: vismay.shah@barefootnetworks.com
+mail: vishah@barefootnetworks.com
+
+# Li Zhao, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Li Zhao,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: liz@barefootnetworks.com
+proxyAddresses: li.zhao@barefootnetworks.com
+mail: lzhao@barefootnetworks.com
+
+# Jun Sun, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jun Sun,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: jun.sun@barefootnetworks.com
+mail: jsun@barefootnetworks.com
+
+# Ravi Dhanda, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ravi Dhanda,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ravi.dhanda@barefootnetworks.com
+mail: rdhanda@barefootnetworks.com
+
+# Ravi Dhanani, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ravi Dhanani,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ravid@barefootnetworks.com
+proxyAddresses: dhanani@barefootnetworks.com
+proxyAddresses: ravi.dhanani@barefootnetworks.com
+mail: rdhanani@barefootnetworks.com
+
+# Neha Shrotriy, CONTRACTORS, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Neha Shrotriy,OU=CONTRACTORS,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: nehas@barefootnetworks.com
+proxyAddresses: neha.shrotriy@barefootnetworks.com
+mail: nshrotriy@barefootnetworks.com
+
+# CH, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: OU=CH,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+
+# Glow Yang, CH, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Glow Yang,OU=CH,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: glowy@barefootnetworks.com
+proxyAddresses: glow@barefootnetworks.com
+proxyAddresses: glow.yang@barefootnetworks.com
+mail: gyang@barefootnetworks.com
+
+# Haitao Kang, CH, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Haitao Kang,OU=CH,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: haitaok@barefootnetworks.com
+proxyAddresses: haitao.kang@barefootnetworks.com
+mail: hkang@barefootnetworks.com
+
+# Sam Luo, CH, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Sam Luo,OU=CH,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: sam.luo@barefootnetworks.com
+mail: sluo@barefootnetworks.com
+
+# Felix Huang, CH, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Felix Huang,OU=CH,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: felix.huang@barefootnetworks.com
+mail: fhuang@barefootnetworks.com
+
+# US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+
+# Yan Wang, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Yan Wang,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: yan.wang@barefootnetworks.com
+proxyAddresses: yanw@barefootnetworks.com
+mail: ywang@barefootnetworks.com
+
+# Xiaozhou Li, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Xiaozhou Li,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: xli@barefootnetworks.com
+
+# Wilson Chan, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Wilson Chan,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: wchan@barefootnetworks.com
+
+# Vladimir Gurevich, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Vladimir Gurevich,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: vladimirg@barefootnetworks.com
+proxyAddresses: vag@barefootnetworks.com
+proxyAddresses: vladimir.gurevich@barefootnetworks.com
+mail: vgurevich@barefootnetworks.com
+
+# Vinayak Parameshwara, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Vinayak Parameshwara,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: vkp@barefootnetworks.com
+proxyAddresses: vin@barefootnetworks.com
+mail: vparameshwara@barefootnetworks.com
+
+# Vasanth Kumar, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Vasanth Kumar,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: vkumar@barefootnetworks.com
+
+# Uttam Aggarwal, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Uttam Aggarwal,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: uttam.aggarwal@barefootnetworks.com
+proxyAddresses: uttam@barefootnetworks.com
+mail: uaggarwal@barefootnetworks.com
+
+# Thinh Hau, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Thinh Hau,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: thinhh@barefootnetworks.com
+proxyAddresses: thinh.hau@barefootnetworks.com
+mail: thau@barefootnetworks.com
+
+# Jithin Joseph, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jithin Joseph,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: jjoseph@barefootnetworks.com
+
+# Boye Oshin, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Boye Oshin,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: adeboyeo@barefootnetworks.com
+proxyAddresses: adeboye.oshin@barefootnetworks.com
+mail: aoshin@barefootnetworks.com
+
+# Steve Licking, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Steve Licking,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: stevel@barefootnetworks.com
+proxyAddresses: steve.licking@barefootnetworks.com
+proxyAddresses: steve@barefootnetworks.com
+mail: slicking@barefootnetworks.com
+
+# Martin Musladin, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Martin Musladin,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: martinm@barefootnetworks.com
+proxyAddresses: martin.musladin@barefootnetworks.com
+mail: mmusladin@barefootnetworks.com
+
+# Srivi Dhruvanarayan, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Srivi Dhruvanarayan,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: srivid@barefootnetworks.com
+proxyAddresses: srivi.dhruvanarayan@barefootnetworks.com
+proxyAddresses: srivi@barefootnetworks.com
+mail: sdhruvanarayan@barefootnetworks.com
+
+# Dushyant Arora, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Dushyant Arora,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: darora@barefootnetworks.com
+
+# Srikrishna Gopu, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Srikrishna Gopu,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: srikrishnag@barefootnetworks.com
+proxyAddresses: srikrishna.gopu@barefootnetworks.com
+proxyAddresses: krishna@barefootnetworks.com
+mail: sgopu@barefootnetworks.com
+
+# Vivek Ramnath, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Vivek Ramnath,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: vivekr@barefootnetworks.com
+proxyAddresses: vivek.ramnath@barefootnetworks.com
+mail: vramnath@barefootnetworks.com
+
+# Siva Muthusamy, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Siva Muthusamy,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: sivam@barefootnetworks.com
+proxyAddresses: siva.muthusamy@barefootnetworks.com
+mail: smuthusamy@barefootnetworks.com
+
+# Sandeep Shyamsukha, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Sandeep Shyamsukha,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: sshyamsukha@barefootnetworks.com
+
+# Siddhartha Sankar Sinha, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Siddhartha Sankar Sinha,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: siddhartha.sinha@barefootnetworks.com
+mail: ssinha@barefootnetworks.com
+
+# Theo Jepsen, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Theo Jepsen,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: theoj@barefootnetworks.com
+proxyAddresses: theo.jepsen@barefootnetworks.com
+mail: tjepsen@barefootnetworks.com
+
+# Shruti Sheth, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Shruti Sheth,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: shrutis@barefootnetworks.com
+proxyAddresses: shruti@barefootnetworks.com
+proxyAddresses: shruti.sheth@barefootnetworks.com
+mail: ssheth@barefootnetworks.com
+
+# Michael  Quaintance, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Michael  Quaintance,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: michaelq@barefootnetworks.com
+proxyAddresses: michael.quaintance@barefootnetworks.com
+mail: mquaintance@barefootnetworks.com
+
+# Shruthi Krishnan, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Shruthi Krishnan,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: shruthik@barefootnetworks.com
+proxyAddresses: shruthi@barefootnetworks.com
+proxyAddresses: shruthi.krishnan@barefootnetworks.com
+mail: skrishnan@barefootnetworks.com
+
+# Deep Ghosh, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Deep Ghosh,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: deepg@barefootnetworks.com
+proxyAddresses: deep.ghosh@barefootnetworks.com
+mail: dghosh@barefootnetworks.com
+
+# Shridevi Gurram, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Shridevi Gurram,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: shridevig@barefootnetworks.com
+proxyAddresses: shridevi.gurram@barefootnetworks.com
+mail: sgurram@barefootnetworks.com
+
+# Sheng Lin, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Sheng Lin,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: shengl@barefootnetworks.com
+proxyAddresses: sheng.lin@barefootnetworks.com
+mail: slin@barefootnetworks.com
+
+# Shalini Sharma, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Shalini Sharma,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: shalini.sharma@barefootnetworks.com
+mail: ssharma@barefootnetworks.com
+
+# Saurabh Singh, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Saurabh Singh,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: saurabh.singh@barefootnetworks.com
+proxyAddresses: saurabh@barefootnetworks.com
+mail: ssingh@barefootnetworks.com
+
+# Saurabh Patel, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Saurabh Patel,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: saurabhp@barefootnetworks.com
+proxyAddresses: saurabh.patel@barefootnetworks.com
+mail: spatel@barefootnetworks.com
+
+# Samantha Islam, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Samantha Islam,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: samantha.islam@barefootnetworks.com
+mail: sislam@barefootnetworks.com
+
+# Keertan Kini, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Keertan Kini,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: keertank@barefootnetworks.com
+proxyAddresses: keertan.kini@barefootnetworks.com
+mail: kkini@barefootnetworks.com
+
+# Sagar Balani, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Sagar Balani,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: sagarb@barefootnetworks.com
+proxyAddresses: sagar.balani@barefootnetworks.com
+mail: sbalani@barefootnetworks.com
+
+# Daniel Alvarez, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Daniel Alvarez,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: daniela@barefootnetworks.com
+proxyAddresses: daniel.alvarez@barefootnetworks.com
+mail: dalvarez@barefootnetworks.com
+
+# Sachin Bahadur, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Sachin Bahadur,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: sachin.bahadur@barefootnetworks.com
+proxyAddresses: sachinb@barefootnetworks.com
+mail: sbahadur@barefootnetworks.com
+
+# Ron Kao, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ron Kao,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ronk@barefootnetworks.com
+proxyAddresses: ron@barefootnetworks.com
+proxyAddresses: ron.kao@barefootnetworks.com
+mail: rkao@barefootnetworks.com
+
+# Romildo Wildgrube, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Romildo Wildgrube,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: romi@barefootnetworks.com
+proxyAddresses: romildo.wildgrube@barefootnetworks.com
+proxyAddresses: romildo@barefootnetworks.com
+mail: rwildgrube@barefootnetworks.com
+
+# Sandesh Kumar, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Sandesh Kumar,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: sandeshk@barefootnetworks.com
+proxyAddresses: sandesh.kumar@barefootnetworks.com
+mail: skumar@barefootnetworks.com
+
+# Rohan Sikka, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Rohan Sikka,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: rohans@barefootnetworks.com
+proxyAddresses: rohan.sikka@barefootnetworks.com
+mail: rsikka@barefootnetworks.com
+
+# Rohan Mahajan, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Rohan Mahajan,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: rohanm@barefootnetworks.com
+proxyAddresses: rohan.mahajan@barefootnetworks.com
+mail: rmahajan@barefootnetworks.com
+
+# Roger Moh, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Roger Moh,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: rogerm@barefootnetworks.com
+proxyAddresses: roger.moh@barefootnetworks.com
+mail: rmoh@barefootnetworks.com
+
+# Roberto Mari, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Roberto Mari,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: robertom@barefootnetworks.com
+proxyAddresses: roberto.mari@barefootnetworks.com
+mail: rmari@barefootnetworks.com
+
+# Robert Soule, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Robert Soule,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: roberts@barefootnetworks.com
+proxyAddresses: robert.soule@barefootnetworks.com
+mail: rsoule@barefootnetworks.com
+
+# Robert Li, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Robert Li,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: robertl@barefootnetworks.com
+proxyAddresses: robert.li@barefootnetworks.com
+proxyAddresses: robli@barefootnetworks.com
+mail: rli@barefootnetworks.com
+
+# Riddhi Kapasi, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Riddhi Kapasi,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: riddhik@barefootnetworks.com
+proxyAddresses: riddhi.kapasi@barefootnetworks.com
+mail: rkapasi@barefootnetworks.com
+
+# Remy Chang, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Remy Chang,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: remyc@barefootnetworks.com
+proxyAddresses: remy@barefootnetworks.com
+proxyAddresses: remy.chang@barefootnetworks.com
+mail: rchang@barefootnetworks.com
+
+# Reeshav Kumar, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Reeshav Kumar,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: rkumar@barefootnetworks.com
+
+# Ravindra Sunkad, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ravindra Sunkad,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ravindras@barefootnetworks.com
+proxyAddresses: ravindra.sunkad@barefootnetworks.com
+proxyAddresses: ravindra@barefootnetworks.com
+mail: rsunkad@barefootnetworks.com
+
+# Ramkumar Krishnamoorthy, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ramkumar Krishnamoorthy,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ramkumark@barefootnetworks.com
+proxyAddresses: ramkumar.krishnamoorthy@barefootnetworks.com
+proxyAddresses: kram@barefootnetworks.com
+mail: rkrishnamoorthy@barefootnetworks.com
+
+# Rachel Hunter, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Rachel Hunter,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: rachelh@barefootnetworks.com
+proxyAddresses: rachel.hunter@barefootnetworks.com
+proxyAddresses: rachel@barefootnetworks.com
+mail: rhunter@barefootnetworks.com
+
+# Rachel Everman, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Rachel Everman,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: martin.izzard@barefootnetworks.com
+proxyAddresses: mizzard@barefootnetworks.com
+proxyAddresses: martin@barefootnetworks.com
+proxyAddresses: rachele@barefootnetworks.com
+proxyAddresses: rachel.everman@barefootnetworks.com
+mail: reverman@barefootnetworks.com
+
+# Prem Jonnalagadda, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Prem Jonnalagadda,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: premj@barefootnetworks.com
+proxyAddresses: prem.jonnalagadda@barefootnetworks.com
+proxyAddresses: prem@barefootnetworks.com
+mail: pjonnalagadda@barefootnetworks.com
+
+# Pradeep Nagaraj, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Pradeep Nagaraj,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: pradeepn@barefootnetworks.com
+proxyAddresses: pradeep.nagaraj@barefootnetworks.com
+mail: pnagaraj@barefootnetworks.com
+
+# Patrick Tanlimco, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Patrick Tanlimco,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: patrickt@barefootnetworks.com
+proxyAddresses: patrick.tanlimco@barefootnetworks.com
+mail: ptanlimco@barefootnetworks.com
+
+# Iurii Iurchenko, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Iurii Iurchenko,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: iurii.iurchenko@barefootnetworks.com
+mail: iiurchenko@barefootnetworks.com
+
+# Patrick Bosshart, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Patrick Bosshart,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: patrickb@barefootnetworks.com
+proxyAddresses: patrick.bosshart@barefootnetworks.com
+proxyAddresses: bosshart@barefootnetworks.com
+mail: pbosshart@barefootnetworks.com
+
+# Pallavi Shurpali, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Pallavi Shurpali,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: pallavis@barefootnetworks.com
+proxyAddresses: pallavi.shurpali@barefootnetworks.com
+mail: pshurpali@barefootnetworks.com
+
+# Nick McKeown, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Nick McKeown,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: nick.mckeown@barefootnetworks.com
+proxyAddresses: nickm@barefootnetworks.com
+mail: nmckeown@barefootnetworks.com
+
+# ND Ramesh, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=ND Ramesh,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ndr@barefootnetworks.com
+proxyAddresses: ndjira@barefootnetworks.com
+proxyAddresses: nd@barefootnetworks.com
+proxyAddresses: nd.ramesh@barefootnetworks.com
+mail: nramesh@barefootnetworks.com
+
+# Nate Foster, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Nate Foster,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: nfoster@barefootnetworks.com
+
+# Nachiketa Gadiyar, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Nachiketa Gadiyar,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: ngadiyar@barefootnetworks.com
+
+# Mor Ben-Asher, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Mor Ben-Asher,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: morb@barefootnetworks.com
+proxyAddresses: mor.bensasher@barefootnetworks.com
+proxyAddresses: mor@barefootnetworks.com
+mail: mbenasher@barefootnetworks.com
+
+# Mohit Kumar, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Mohit Kumar,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: mohit@barefootnetworks.com
+proxyAddresses: mohit.kumar@barefootnetworks.com
+mail: mkumar@barefootnetworks.com
+
+# Mohammad El-Shabani, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Mohammad El-Shabani,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: melshabani@barefootnetworks.com
+
+# Milad Sharif, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Milad Sharif,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: milads@barefootnetworks.com
+proxyAddresses: milad.sharif@barefootnetworks.com
+mail: msharif@barefootnetworks.com
+
+# Mickey  Spiegel, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Mickey  Spiegel,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: mickeys@barefootnetworks.com
+proxyAddresses: mickey.spiegel@barefootnetworks.com
+mail: mspiegel@barefootnetworks.com
+
+# Michael Ferrara, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Michael Ferrara,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: mferrara@barefootnetworks.com
+
+# Michael Feng, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Michael Feng,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: michaelf@barefootnetworks.com
+proxyAddresses: michael@barefootnetworks.com
+proxyAddresses: michael.feng@barefootnetworks.com
+mail: mfeng@barefootnetworks.com
+
+# Michael Attig, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Michael Attig,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: mike@barefootnetworks.com
+proxyAddresses: michaela@barefootnetworks.com
+proxyAddresses: michael.attig@barefootnetworks.com
+mail: mattig@barefootnetworks.com
+
+# Melodie Shafazand, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Melodie Shafazand,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: melodies@barefootnetworks.com
+proxyAddresses: melodie@barefootnetworks.com
+proxyAddresses: melodie.shafazand@barefootnetworks.com
+mail: mshafazand@barefootnetworks.com
+
+# Masoud Moshref, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Masoud Moshref,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: masoudm@barefootnetworks.com
+proxyAddresses: masoud.moshref@barefootnetworks.com
+mail: mmoshref@barefootnetworks.com
+
+# Mahadevan Ganapathi, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Mahadevan Ganapathi,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: mganapathi@barefootnetworks.com
+
+# Madhavi Rajan, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Madhavi Rajan,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: madhavir@barefootnetworks.com
+proxyAddresses: madhavi@barefootnetworks.com
+proxyAddresses: madhavi.rajan@barefootnetworks.com
+mail: mrajan@barefootnetworks.com
+
+# Louis Tseng, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Louis Tseng,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: louist@barefootnetworks.com
+proxyAddresses: louis.tseng@barefootnetworks.com
+mail: ltseng@barefootnetworks.com
+
+# Liangda Ho, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Liangda Ho,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: liangdah@barefootnetworks.com
+proxyAddresses: liangda.ho@barefootnetworks.com
+mail: lho@barefootnetworks.com
+
+# Li-Siang Lee, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Li-Siang Lee,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: lisiangl@barefootnetworks.com
+proxyAddresses: lisiang@barefootnetworks.com
+proxyAddresses: lisiang.lee@barefootnetworks.com
+mail: llee@barefootnetworks.com
+
+# Kune Yang, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Kune Yang,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: kuney@barefootnetworks.com
+proxyAddresses: kune.yang@barefootnetworks.com
+mail: kyang@barefootnetworks.com
+
+# Kumaresh Perumal, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Kumaresh Perumal,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: kumareshp@barefootnetworks.com
+proxyAddresses: kumaresh.perumal@barefootnetworks.com
+mail: kperumal@barefootnetworks.com
+
+# Karthik Kannan, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Karthik Kannan,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: karthik.kannan@barefootnetworks.com
+mail: kkannan@barefootnetworks.com
+
+# Karen Chiu, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Karen Chiu,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: karen@barefootnetworks.com
+proxyAddresses: karen.chiu@barefootnetworks.com
+mail: kchiu@barefootnetworks.com
+
+# Jyoti Nair, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jyoti Nair,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: jyoti.nair@barefootnetworks.com
+mail: jnair@barefootnetworks.com
+
+# Julianne Zhu, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Julianne Zhu,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: juliannez@barefootnetworks.com
+proxyAddresses: julianne.zhu@barefootnetworks.com
+mail: jzhu@barefootnetworks.com
+
+# Josh Robinson, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Josh Robinson,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: jrobinson@barefootnetworks.com
+
+# Johnathan Le, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Johnathan Le,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: jonathanl@barefootnetworks.com
+proxyAddresses: jonathan.le@barefootnetworks.com
+proxyAddresses: johnathan.le@barefootnetworks.com
+mail: jle@barefootnetworks.com
+
+# John DeMay, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=John DeMay,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: johnd@barefootnetworks.com
+proxyAddresses: john.demay@barefootnetworks.com
+proxyAddresses: jd@barefootnetworks.com
+mail: jdemay@barefootnetworks.com
+
+# John Cheung, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=John Cheung,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: johnc@barefootnetworks.com
+proxyAddresses: john.cheung@barefootnetworks.com
+mail: jcheung@barefootnetworks.com
+
+# Joel Tan, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Joel Tan,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: joelt@barefootnetworks.com
+proxyAddresses: joel.tan@barefootnetworks.com
+mail: jtan@barefootnetworks.com
+
+# Jithin Thomas, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jithin Thomas,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: jithint@barefootnetworks.com
+proxyAddresses: jithin.thomas@barefootnetworks.com
+mail: jthomas@barefootnetworks.com
+
+# Jian Han, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jian Han,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: jhan@barefootnetworks.com
+
+# Jerry Chuang, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jerry Chuang,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: jerryc@barefootnetworks.com
+proxyAddresses: jerry@barefootnetworks.com
+proxyAddresses: jerry.chuang@barefootnetworks.com
+mail: jchuang@barefootnetworks.com
+
+# Jeongkeun Lee, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jeongkeun Lee,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: jklee@barefootnetworks.com
+proxyAddresses: jeongkeunl@barefootnetworks.com
+proxyAddresses: jeongkeun.lee@barefootnetworks.com
+mail: jlee@barefootnetworks.com
+
+# Jay Peterson, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jay Peterson,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: jayp@barefootnetworks.com
+proxyAddresses: jay@barefootnetworks.com
+proxyAddresses: jay.peterson@barefootnetworks.com
+mail: jpeterson@barefootnetworks.com
+
+# Iravati Bhatavadekar, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Iravati Bhatavadekar,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: ibhatavadekar@barefootnetworks.com
+
+# Ho-Cheng Tseng, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ho-Cheng Tseng,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: hochengt@barefootnetworks.com
+proxyAddresses: hocheng.tseng@barefootnetworks.com
+mail: htseng@barefootnetworks.com
+
+# Henry Wang, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Henry Wang,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: henryw@barefootnetworks.com
+proxyAddresses: henry.wang@barefootnetworks.com
+mail: hwang@barefootnetworks.com
+
+# Hatice Ergun, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Hatice Ergun,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: haticee@barefootnetworks.com
+proxyAddresses: hatice.ergun@barefootnetworks.com
+mail: hergun@barefootnetworks.com
+
+# Harikrishna Emani, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Harikrishna Emani,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: harikrishnae@barefootnetworks.com
+proxyAddresses: harikrishna.emani@barefootnetworks.com
+mail: hemani@barefootnetworks.com
+
+# Han Wang, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Han Wang,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: hawang@barefootnetworks.com
+proxyAddresses: hanw@barefootnetworks.com
+proxyAddresses: han.wang@barefootnetworks.com
+mail: hanwang@barefootnetworks.com
+
+# Greg Watson, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Greg Watson,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: gwatson@barefootnetworks.com
+
+# Glen Gibb, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Glen Gibb,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: nimda@barefootnetworks.com
+proxyAddresses: jong@barefootnetworks.com
+proxyAddresses: joe@barefootnetworks.com
+proxyAddresses: joe.ong@barefootnetworks.com
+proxyAddresses: grg@barefootnetworks.com
+proxyAddresses: gleng@barefootnetworks.com
+proxyAddresses: glen@barefootnetworks.com
+proxyAddresses: glen.gibb@barefootnetworks.com
+mail: ggibb@barefootnetworks.com
+
+# Georgios Nikolaidis, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Georgios Nikolaidis,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: gnikolaidis@barefootnetworks.com
+
+# Gaurav Ajwani, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Gaurav Ajwani,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: gaurava@barefootnetworks.com
+proxyAddresses: gaurav.ajwani@barefootnetworks.com
+mail: gajwani@barefootnetworks.com
+
+# Evan Cheshire, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Evan Cheshire,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: echeshire@barefootnetworks.com
+
+# Eric Theis, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Eric Theis,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ertheis@barefootnetworks.com
+proxyAddresses: erict@barefootnetworks.com
+proxyAddresses: eric.theis@barefootnetworks.com
+mail: etheis@barefootnetworks.com
+
+# Ed Doe, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ed Doe,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ljw@barefootnetworks.com
+proxyAddresses: edward.doe@barefootnetworks.com
+proxyAddresses: edd@barefootnetworks.com
+proxyAddresses: ed@barefootnetworks.com
+proxyAddresses: ed.doe@barefootnetworks.com
+mail: edoe@barefootnetworks.com
+
+# Dileep Rao, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Dileep Rao,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: dileepr@barefootnetworks.com
+proxyAddresses: dileep@barefootnetworks.com
+proxyAddresses: dileep.rao@barefootnetworks.com
+mail: drao@barefootnetworks.com
+
+# Dheepak Jayaraman, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Dheepak Jayaraman,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: dheepak.jayaraman@barefootnetworks.com
+mail: djayaraman@barefootnetworks.com
+
+# Daxay Rawal, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Daxay Rawal,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: daxayr@barefootnetworks.com
+proxyAddresses: daxay.rawal@barefootnetworks.com
+mail: drawal@barefootnetworks.com
+
+# Dan Lenoski, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Dan Lenoski,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: lenoski@barefootnetworks.com
+proxyAddresses: dan@barefootnetworks.com
+mail: dlenoski@barefootnetworks.com
+
+# Dailene Bray, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Dailene Bray,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: daileneb@barefootnetworks.com
+proxyAddresses: dailene.bray@barefootnetworks.com
+mail: dbray@barefootnetworks.com
+
+# Cris Cearing, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Cris Cearing,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: crisc@barefootnetworks.com
+proxyAddresses: cris@barefootnetworks.com
+proxyAddresses: cris.cearing@barefootnetworks.com
+mail: ccearing@barefootnetworks.com
+
+# Craig Barratt, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Craig Barratt,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: craigb@barefootnetworks.com
+proxyAddresses: craig@barefootnetworks.com
+proxyAddresses: craig.barratt@barefootnetworks.com
+proxyAddresses: cbarrat@barefootnetworks.com
+mail: cbarratt@barefootnetworks.com
+
+# Cole Schlesinger, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Cole Schlesinger,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+mail: cschlesinger@barefootnetworks.com
+
+# Christina Antony, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Christina Antony,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: christinaa@barefootnetworks.com
+proxyAddresses: christina.antony@barefootnetworks.com
+mail: cantony@barefootnetworks.com
+
+# Chris Dodd, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Chris Dodd,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: chrisd@barefootnetworks.com
+proxyAddresses: chris@barefootnetworks.com
+proxyAddresses: chris.dodd@barefootnetworks.com
+mail: cdodd@barefootnetworks.com
+
+# Chloe Darsch, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Chloe Darsch,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: chloed@barefootnetworks.com
+proxyAddresses: chloe@barefootnetworks.com
+proxyAddresses: chloe.darsch@barefootnetworks.com
+mail: cdarsch@barefootnetworks.com
+
+# Chinyu Chen, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Chinyu Chen,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: chinyu.chen@barefootnetworks.com
+mail: cchen@barefootnetworks.com
+
+# Cheng-I Huang, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Cheng-I Huang,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: chengih@barefootnetworks.com
+proxyAddresses: chengi@barefootnetworks.com
+proxyAddresses: chengi.huang@barefootnetworks.com
+mail: chuang@barefootnetworks.com
+
+# Changhoon Kim, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Changhoon Kim,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: chkim@barefootnetworks.com
+proxyAddresses: changhoonk@barefootnetworks.com
+proxyAddresses: changhoon.kim@barefootnetworks.com
+proxyAddresses: chang@barefootnetworks.com
+mail: ckim@barefootnetworks.com
+
+# Chandasree Chandrashekar, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Chandasree Chandrashekar,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: chandasree.chandrashekar@barefootnetworks.com
+mail: cchandrashekar@barefootnetworks.com
+
+# Calin Cascaval, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Calin Cascaval,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: cascaval@barefootnetworks.com
+proxyAddresses: calinc@barefootnetworks.com
+proxyAddresses: calin.cascaval@barefootnetworks.com
+mail: ccascaval@barefootnetworks.com
+
+# Bruce McLoughlin, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Bruce McLoughlin,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: brucem@barefootnetworks.com
+proxyAddresses: bruce@barefootnetworks.com
+proxyAddresses: bruce.mcloughlin@barefootnetworks.com
+mail: bmcloughlin@barefootnetworks.com
+
+# Bhrugurajsinh Chudasama, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Bhrugurajsinh Chudasama,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: brugurajsinh.chudasama@barefootnetworks.com
+proxyAddresses: bhrugurajsinhc@barefootnetworks.com
+proxyAddresses: bhrugurajsinh.chudasama@barefootnetworks.com
+proxyAddresses: bhrugu@barefootnetworks.com
+mail: bchudasama@barefootnetworks.com
+
+# Avinash Herle, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Avinash Herle,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: avinashh@barefootnetworks.com
+proxyAddresses: avinash.herle@barefootnetworks.com
+mail: aherle@barefootnetworks.com
+
+# Cameron Knox, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Cameron Knox,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: cameronk@barefootnetworks.com
+proxyAddresses: cameron.knox@barefootnetworks.com
+mail: cknox@barefootnetworks.com
+
+# Ashutosh  Agrawal, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ashutosh  Agrawal,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ashutosha@barefootnetworks.com
+proxyAddresses: ashutosh.agrawal@barefootnetworks.com
+mail: asagrawal@barefootnetworks.com
+
+# Krishna Garlapati, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Krishna Garlapati,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: krishnag@barefootnetworks.com
+proxyAddresses: krishna.garlapati@barefootnetworks.com
+mail: kgarlapati@barefootnetworks.com
+
+# Arley Lewis, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Arley Lewis,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: arley@barefootnetworks.com
+proxyAddresses: arley.lewis@barefootnetworks.com
+mail: alewis@barefootnetworks.com
+
+# Urmila Kamat, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Urmila Kamat,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: urmilak@barefootnetworks.com
+proxyAddresses: urmila.kamat@barefootnetworks.com
+mail: ukamat@barefootnetworks.com
+
+# Arkadiy Shapiro, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Arkadiy Shapiro,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: arkadiys@barefootnetworks.com
+proxyAddresses: arkadiy@barefootnetworks.com
+proxyAddresses: arkadiy.shapiro@barefootnetworks.com
+mail: ashapiro@barefootnetworks.com
+
+# Vijesh Puthrandiyil, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Vijesh Puthrandiyil,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: vijeshp@barefootnetworks.com
+proxyAddresses: vijesh@barefootnetworks.com
+proxyAddresses: vijesh.puthrandiyil@barefootnetworks.com
+mail: vputhrandiyil@barefootnetworks.com
+
+# Anurag Agrawal, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Anurag Agrawal,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: anuraga@barefootnetworks.com
+proxyAddresses: anurag@barefootnetworks.com
+proxyAddresses: anurag.agarwal@barefootnetworks.com
+mail: aagrawal@barefootnetworks.com
+
+# Anu Mitra, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Anu Mitra,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: anu.mitra@barefootnetworks.com
+mail: amitra@barefootnetworks.com
+
+# Abe Yee, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Abe Yee,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: abey@barefootnetworks.com
+proxyAddresses: abe.yee@barefootnetworks.com
+mail: ayee@barefootnetworks.com
+
+# Antonin Bas, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Antonin Bas,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: antoninb@barefootnetworks.com
+proxyAddresses: antonin@barefootnetworks.com
+proxyAddresses: antonin.bas@barefootnetworks.com
+mail: abas@barefootnetworks.com
+
+# Zhao Ma, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Zhao Ma,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: zhaom@barefootnetworks.com
+proxyAddresses: zhao.ma@barefootnetworks.com
+mail: zma@barefootnetworks.com
+
+# Shweta Naik, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Shweta Naik,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: shwetan@barefootnetworks.com
+proxyAddresses: shweta.naik@barefootnetworks.com
+mail: snaik@barefootnetworks.com
+
+# Jed Liu, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jed Liu,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: jed.liu@barefootnetworks.com
+mail: jliu@barefootnetworks.com
+
+# Aniket Deshpande, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Aniket Deshpande,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: aniketd@barefootnetworks.com
+proxyAddresses: aniket.deshpande@barefootnetworks.com
+mail: adeshpande@barefootnetworks.com
+
+# Andre Lam, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Andre Lam,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: andrel@barefootnetworks.com
+proxyAddresses: andre.lam@barefootnetworks.com
+mail: alam@barefootnetworks.com
+
+# Anan Baransy, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Anan Baransy,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ananb@barefootnetworks.com
+proxyAddresses: anan.baransy@barefootnetworks.com
+mail: abaransy@barefootnetworks.com
+
+# Amresh Kulkarni, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Amresh Kulkarni,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: amreshk@barefootnetworks.com
+proxyAddresses: amresh.kulkarni@barefootnetworks.com
+mail: akulkarni@barefootnetworks.com
+
+# Ameya Vaidya, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ameya Vaidya,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ameyav@barefootnetworks.com
+proxyAddresses: ameya.vaidya@barefootnetworks.com
+mail: avaidya@barefootnetworks.com
+
+# Bharath Seshadri, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Bharath Seshadri,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: bharath.seshadri@barefootnetworks.com
+mail: bseshadri@barefootnetworks.com
+
+# Alain Loge, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Alain Loge,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: alainl@barefootnetworks.com
+proxyAddresses: alain@barefootnetworks.com
+proxyAddresses: alain.loge@barefootnetworks.com
+mail: aloge@barefootnetworks.com
+
+# Akin Koyuncuoglu, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Akin Koyuncuoglu,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: akink@barefootnetworks.com
+proxyAddresses: akin@barefootnetworks.com
+proxyAddresses: akin.koyuncuoglu@barefootnetworks.com
+mail: akoyuncuoglu@barefootnetworks.com
+
+# Ravi Vantipalli, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ravi Vantipalli,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ravi.vantipalli@barefootnetworks.com
+mail: rvantipalli@barefootnetworks.com
+
+# Ajinkya Bari, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ajinkya Bari,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ajinkya.bari@barefootnetworks.com
+mail: abari@barefootnetworks.com
+
+# Manoj Reddy, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Manoj Reddy,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: manoj.reddy@barefootnetworks.com
+mail: mreddy@barefootnetworks.com
+
+# Ajay Thadhlani, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Ajay Thadhlani,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: ajayt@barefootnetworks.com
+proxyAddresses: ajay@barefootnetworks.com
+proxyAddresses: ajay.thadhlani@barefootnetworks.com
+mail: athadhlani@barefootnetworks.com
+
+# Kirsten Martin, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Kirsten Martin,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: kirsten.martin@barefootnetworks.com
+mail: kmartin@barefootnetworks.com
+
+# Saravan Rajendran, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Saravan Rajendran,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: saravanr@barefootnetworks.com
+proxyAddresses: saravan@barefootnetworks.com
+proxyAddresses: saravan.rajendran@barefootnetworks.com
+mail: srajendran@barefootnetworks.com
+
+# Min Woo, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Min Woo,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: min.woo@barefootnetworks.com
+mail: mwoo@barefootnetworks.com
+
+# Jeanette Pigue, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jeanette Pigue,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: jeanette.pigue@barefootnetworks.com
+mail: jpigue@barefootnetworks.com
+
+# David Young, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=David Young,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: david.young@barefootnetworks.com
+mail: dyoung@barefootnetworks.com
+
+# William Carr, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=William Carr,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: william.carr@barefootnetworks.com
+mail: wcarr@barefootnetworks.com
+
+# Jonathan Stone, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Jonathan Stone,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: jonathan.stone@barefootnetworks.com
+mail: jstone@barefootnetworks.com
+
+# John Doe, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=John Doe,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: john.d.test.barefootnetworks.com
+proxyAddresses: john.dc.barefootnetworks.com
+proxyAddresses: john.d.barefootnetworks.com
+proxyAddresses: johnd@barefootnetworks.com
+proxyAddresses: j.doe@barefootnetworks.com
+mail: jdoe@barefootneworks.com
+
+# Sean Kao, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Sean Kao,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: seank@barefootnetworks.com
+proxyAddresses: sean.kao@barefootnetworks.com
+mail: skao@barefootnetworks.com
+
+# Seth Fowler, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Seth Fowler,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: sethf@barefootnetworks.com
+proxyAddresses: seth@barefootnetworks.com
+proxyAddresses: seth.fowler@barefootnetworks.com
+mail: sfowler@barefootnetworks.com
+
+# Samantha Nguyen, US, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Samantha Nguyen,OU=US,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: samanthan@barefootnetworks.com
+proxyAddresses: samantha.nguyen@barefootnetworks.com
+mail: snguyen@barefootnetworks.com
+
+# UK, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: OU=UK,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+
+# Matt Blickem, UK, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Matt Blickem,OU=UK,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: mattb@barefootnetworks.com
+proxyAddresses: matt.blickem@barefootnetworks.com
+mail: mblickem@barefootnetworks.com
+
+# Costas Calamvokis, UK, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Costas Calamvokis,OU=UK,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: costasc@barefootnetworks.com
+proxyAddresses: costas.calamvokis@barefootnetworks.com
+proxyAddresses: costas@barefootnetworks.com
+mail: ccalamvokis@barefootnetworks.com
+
+# Aled Edwards, UK, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Aled Edwards,OU=UK,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: alede@barefootnetworks.com
+proxyAddresses: aled.edwards@barefootnetworks.com
+proxyAddresses: aled@barefootnetworks.com
+mail: aedwards@barefootnetworks.com
+
+# Adam Reynolds, UK, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: CN=Adam Reynolds,OU=UK,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+proxyAddresses: adamr@barefootnetworks.com
+proxyAddresses: adam.reynolds@barefootnetworks.com
+mail: areynolds@barefootnetworks.com
+
+# IN, USERS, BAREFOOT, corp.barefootnetworks.com
+dn: OU=IN,OU=USERS,OU=BAREFOOT,DC=corp,DC=barefootnetworks,DC=com
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 230
+# numEntries: 229

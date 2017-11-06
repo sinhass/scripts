@@ -1,0 +1,400 @@
+#!/bin/ksh
+
+EXTRACT_VER=1.3
+###########################################################################
+# Extraction RDWS Tool
+# Input must be a combined RDWS TARFILE
+###########################################################################
+
+find_file() 
+{
+FILE=$1
+clear
+ibm_delivery
+
+if [[ ! -n $BASE ]]; then
+ BASE=`pwd`
+fi
+
+if [[ -f ${BASE}/${FILE} ]]; then
+ file=`ls ${BASE}/${FILE}`
+fi
+
+if [[ ! -f ${BASE}/${DRFILE} ]]; then
+ if [[ -z ${BASE}/${DRFILE} ]]; then
+  clear
+ fi
+
+file=`ls | egrep -i "TARFILE"`
+ if [[ ! -n $file ]]; then
+  clear
+  print "\nNo RDWS files found!  Check directory/filename and try again!\n"
+  exit 1
+ fi
+
+ print "\n\aChoose a valid file!\n"
+
+ for i in $file; do
+  (( select_num = $select_num + 1 ))
+  names[$select_num]="$i"
+  print "$select_num. $i"
+ done
+
+ print "\nPlease make one selection!  Or [Q-Quit]\n"
+ while read select_file; do
+  case $select_file in
+   +([0-9]))
+    if (( $select_file <= $select_num )); then
+     print "\nDirectory: ${names[$select_file]}"
+     print "Is this correct?  [Y/N] or [Q-Quit] \c"
+     while read answer; do
+      case $answer in
+        Y|y) DRFILE=${names[$select_file]}
+        clear
+        break ;;
+        N|n) DRFILE=""; break ;;
+        Q|q) exit 1 ;;
+        *) ;;
+      esac
+      print "Enter [Y/N or [Q] \c"
+     done
+
+    else
+     print "Must be from 1 to $select_num or [Q-Quit]!\n"
+     print "Please must make a valid selection!"
+     select_num=0
+
+     for i in $file; do
+      (( select_num = $select_num + 1 ))
+      names[$select_num]="$i"
+      echo "$select_num. $i"
+     done
+    fi ;;
+   Q|q) exit 1 ;;
+   *) print "Enter a number please!" ;;
+  esac
+ if [[ -f $DRFILE ]]; then
+  DRFILET=`echo $DRFILE|awk -F'/' '{print $NF}'`
+  BASE=`echo $DRFILE|sed s!$DRFILET!!g`
+  DRFILET=""
+  break
+ else
+ clear
+    print "Must be from 1 to $select_num or [Q-Quit]\n"
+    print "Please must make a valid selection!"
+    select_num=0
+    for i in $file
+    do
+     (( select_num = $select_num + 1 ))
+     names[$select_num]="$i"
+     echo "$select_num. $i"
+    done
+ fi
+
+ done
+
+fi
+}
+
+sep_line()
+{
+echo "######################################################################"
+}
+sep_line2()
+{
+echo "--------------------------------------------------------------------"
+}
+sep_line3()
+{
+echo "----------------------------------"
+}
+
+ibm_delivery()
+{
+ sep_line
+ printf "%-7s %-8s %49s %-3s \n" '# Date:' $RDATE 'extract_tar Version:' $EXTRACT_VER
+ sep_line
+ print "# Intellectual Property of IBM Corporation. "
+ print "# Protected by U.S. Patent 6,636,988 and other international patents."
+ print "# All Rights Reserved."
+ print "#"
+ print "# (c) 1998-2003 International Business Machines Corporation."
+ print "#     All rights reserved. "
+ sep_line
+}
+
+ver_check()
+{
+
+CHECK=$3
+#
+ case "$1" in
+   snapshot) SNAPSHOT="YES";
+   shift;;
+   standard) SNAPSHOT="";
+   shift;;
+   *) SNAPSHOT="";;
+ esac
+
+ LATEST_RELEASE=$EXTRACT_VER
+ pname="$0"
+ current_dir=$PWD
+ clear
+}
+
+#####################################################################
+# Checks for extract_tar version on internal server: 
+# (bcrsgia.wma.ibm.com) if down level transfers latest then installs 
+#####################################################################
+check_for_latest_version()
+{
+
+ trap 'rm -f /tmp/versions.txt; exit' 1 2 15
+
+ BCRS_SERVER=bcrsgai.wma.ibm.com
+ LATEST_VER=0
+
+ get_latest()
+ { 
+  cd /$HOME
+  print "\nPlease wait, retreiving latest 'extract_tar' version.\n"
+  print "machine $BCRS_SERVER" > .netrc
+  print "\t login delivery"    >> .netrc
+  print "\t password support"  >> .netrc
+  print ""                     >> .netrc
+  print "macdef latest"        >> .netrc
+  print "\t bin"               >> .netrc
+  print "\t lcd /tmp"          >> .netrc
+  print "\t get extract_rdws_tools.tar" >> .netrc
+  print "\t quit"              >> .netrc
+  print "\n"                   >> .netrc
+  if [[ -f /.netrc ]]; then
+   chmod 600 /.netrc
+  fi 
+  cd /tmp
+  if [[ -f extract_rdws_tools.tar ]]; then
+   rm -f extract_rdws_tools.tar
+  fi
+  echo "\$ latest" | ftp $BCRS_SERVER 
+  if (( $? == 0 )); then
+   cd /tmp
+   sep_line3
+   print "Installing 'extract_tar' script."
+   tar -xvf /tmp/extract_rdws_tools.tar 2>/dev/null
+   if (( $? == 0 )); then
+    if [[ $current_dir != /tmp ]]; then
+     cp -rf /tmp/extract_tar /$current_dir 
+    fi
+   fi
+   sep_line3
+  else
+    print "\a\nDownload of 'extract_rdws_tools.tar' FAILED!\n"
+  fi
+  
+ }
+
+ ver_check snapshot check
+ ibm_delivery
+ sep_line2
+ print "\t\t  CHECKING FOR CURRENT VERSION"
+ sep_line2
+ print "\nCurrent running 'extract_tar' version: $EXTRACT_VER \n"
+ print "Checking for latest version at: $BCRS_SERVER\n"
+ cd /$HOME
+ if [[ -f .netrc ]]; then
+  cp .netrc .netrc.orig
+ fi 
+ if [[ -f /tmp/versions.txt ]]; then
+  mv -f /tmp/versions.txt /tmp/version.orig
+ fi
+ print "machine $BCRS_SERVER" > .netrc
+ print "\t login version"    >> .netrc
+ print "\t password check"   >> .netrc
+ print ""                    >> .netrc
+ print "macdef checkversion" >> .netrc
+ print "\t asci"             >> .netrc
+ print "\t lcd /tmp"         >> .netrc
+ print "\t get versions.txt" >> .netrc
+ print "\t quit"             >> .netrc
+ print "\n"                  >> .netrc
+ print "macdef latest" >> .netrc
+ print "\t bin"             >> .netrc
+ print "\t get extract_rdws_tools.tar" >> .netrc
+ print "\t quit"             >> .netrc
+ print "\n"                  >> .netrc
+ if [[ -f .netrc ]]; then
+  chmod 600 .netrc
+  ping -c 1 $BCRS_SERVER 50 2>/dev/null 1>/dev/null
+  if (( $? == 0 )); then
+  print "Please wait, retreiving version info now!"
+  echo "\$ checkversion" | ftp $BCRS_SERVER 
+  if (( $? == 0 )); then
+   if [[ -f /tmp/versions.txt ]]; then
+    LATEST_VER=`awk ' /^extract_tar/ {print $0}' /tmp/versions.txt |\
+    awk -F":" '{print $2}'`
+    print "\nChecking current version against latest version\n"
+    sep_line3
+    print "Current verion: $EXTRACT_VER"
+    print "Latest version: $LATEST_VER"
+    sep_line3
+    if (( $(echo "scale=1; $LATEST_VER * 100" | bc) > $(echo "scale=1; $EXTRACT_VER * 100" | bc) )); then
+      print "\a\nLater version available, would you like to download and install it now?"
+     print "\nEnter Y/N \c"
+     while read input; do
+      case $input in
+      Y|y) get_latest
+           break;;
+      N|n) print "\nExiting 'extract_tar' run!\n"
+         exit 1;;
+      *) ;;
+      esac
+     printf "Enter Y/N  \a"
+     done
+
+    else
+     print "\nCurrently at same or higher release level!\n"
+     rm -f /tmp/versions.txt
+     rm -f /.netrc
+    fi
+    
+    print "\nTransfer complete!\n"
+    rm -f /tmp/versions.txt
+   fi
+
+   if [[ -f /.netrc.orig ]]; then
+    mv /.netrc.orig /.netrc
+   else
+    rm -f /.netrc
+   fi 
+  fi 
+
+  else
+   print "\aNot on the IBM Internal network!\n"
+   exit 1
+  fi
+
+ else
+  print "Error!  Could not find .netrc files!"
+  exit 1
+ fi
+
+}
+
+
+############################################
+# MAIN ROUTINE
+############################################
+RDATE=`date '+%Y%m%d'`
+select_num=0
+BASE=""
+DRFILE=""
+ERROR=""
+
+USAGE="Extracts RDWS Combined tarfiles!
+Syntax: extract_tar  [-f]: </filename>
+ \t\t     [-t]: Look for latest 'extract_tar'
+ \t\t     [-h]: HELP!\n"
+
+### Get command line parameters (if any)
+set -- `getopt htf: $* 2>/dev/null`
+if [ $? != 0 ]; then
+ clear
+ ibm_delivery
+ print "\n$USAGE"
+ exit 1
+fi
+
+while [ $1 != -- ]
+do
+ case $1 in
+  -f) DRFILE=$2
+   if [[ ! -f $DRFILE ]]; then
+    clear
+    ibm_delivery
+    print "Invalid Filename!"
+    print "\aChoose a valid directory/filename!\n" 
+    print "\ti.e. /tmp/01037903.TARFILE.D.20021030.Z\n"
+   else
+    DRFILET=`echo $DRFILE|awk -F'/' '{print $NF}'`
+    BASE=`echo $DRFILE|sed s!$DRFILET!!g`
+    DRFILE="$DRFILET"
+   fi
+   shift;;
+  -t) clear
+      ibm_delivery
+      check_for_latest_version
+      exit 1;;
+  -h) clear
+      ibm_delivery
+      print ""
+      print "[-f] : User input file.  i.e. /tmp/01037903.TARFILE.D.20021030.Z"
+      print "[-t] : Check for latest 'extract_tar' at bcrsgai.wma.ibm.com"
+      print "[-h] : HELP!\n"
+      exit 1;;
+   *)  clear
+        print "$OPTARG is not a valid option"
+        print "$USAGE";;
+ esac
+ shift
+done
+
+find_file $DRFILE
+
+if [[ -n $BASE ]]; then
+ cd $BASE
+fi
+
+TARFILES=`tar -tvf $DRFILE | egrep -i "TARFILE.RDWS.BIN.Z" | awk '{print $9}'`
+### CHECK FOR ACTUAL FILES... POSSIBLE OLD TAR COMMAND
+if [[ ! -n $TARFILES ]]; then
+ TARFILES=`tar -tvf $DRFILE | egrep -i "TARFILE.RDWS.BIN.Z" | awk '{print $8}'`
+fi
+
+## CHECK FOR LEADING DIRECTORIES
+if [[ -n `echo "$TARFILES" | awk '/^\// {print $0}'` ]]; then
+ print "\n# --------------------- WARNING ---------------------- #"
+ print "#                                                      #"
+ print "#          RDWS TARFILE IS ABSOLUTE PATHED!            #"
+ print "#                                                      #"
+ print "# --------------------- WARNING ---------------------- #"
+ ERROR=1
+ print "\nLOOK AT THE RDWS FILE: $DRFILE \n"
+ exit 1 
+fi
+
+for i in $TARFILES; do
+ tar -xvf $DRFILE $i
+done
+
+TARFILES=`echo "$TARFILES" | sed -es!"\.\/"!!g`
+TARFILES=`echo "$TARFILES" | sort -t"." -k4`
+
+if [[ ! -n $ERROR ]]; then
+ TFN=""
+
+ for i in $TARFILES; do
+  directory=`echo "$i" | awk -F"." '{print $4}'|tr 'A-Z' 'a-z'`
+  mkdir -p $RDATE/$directory
+  mv $i $RDATE/$directory/
+  cd $RDATE/$directory/
+  FN=`ls *.Z 2>/dev/null`
+  if [[ ! -n $FN ]]; then
+   FN=`ls *.z`
+   FN=`echo "$FN" | tr 'a-z' 'A-Z'` 
+   mv *.z $FN
+  fi
+  zcat *.Z | tar -xvf -
+  cd ../..
+  if [[ -n `echo "$i" | awk '/\// {print $0}'` ]]; then
+   TFN=`echo "$i" | awk -F"/" '{print $NF}'`
+   FN=`echo "$i" | sed -es!"$TFN"!!g`
+   if [[ -d $FN ]]; then
+    rm -r $FN
+    print "Removing Directory: $FN"
+   fi 
+  fi
+ done
+ 
+ print "\nExtract Recovery Directory: ${RDATE} \n"
+
+fi

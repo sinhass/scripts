@@ -1,0 +1,31 @@
+#!/usr/bin/bash
+RADSERVER = bfrad02
+echo -n "Type User Name:"
+read AUTOUSER
+echo -n "Type Password:"
+read newpass
+CREATE_RADIUS_USER () {
+
+  TMPPASS=$(smbencrypt $newpass >/tmp/xx)
+  SAMBAPASS=$(cat /tmp/xx|awk '{print $2}')
+  echo $SAMBAPASS
+  export SAMBAPASS
+  CREATE_LINE="$AUTOUSER      NT-Password := '$SAMBAPASS'"
+  echo $CREATE_LINE >/tmp/xx
+  ssh -q $RADSERVER "cat /etc/raddb/mods-config/files/authorize|grep $AUTOUSER"
+  if [[ $? -eq 0 ]]; then
+    echo "There is one radius user with same user name"
+    exit 1
+  else
+
+    ssh -q $RADSERVER "perl -ni.bk -e 'print unless /\Q$AUTOUSER\E/' $RADIUSPATH && perl -pi.bk -e 'print qq/$AUTOUSER              NT-Password := '\"$SAMBAPASS\"' \n/ if eof;' $RADIUSPATH"
+    ssh -q $RADSERVER 'service radiusd restart'
+    if [[ $? -ne 0 ]]; then
+      echo "Something is not right. I am reseting the file to previous state."
+      echo "Check manually."
+      ssh -q $RADSERVER 'cp /etc/raddb/mods-config/files/authorize.$DATE /etc/raddb/mods-config/files/authorize  && \
+      service radiusd restart'
+      Pause
+    fi
+  fi
+}

@@ -1,0 +1,3 @@
+#!/usr/bin/ksh
+#! Logs all successful log ins
+/usr/bin/logger -t tsm -p auth.info "$@ logged in from $(/usr/bin/tty)"

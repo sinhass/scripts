@@ -1,0 +1,42 @@
+cd /root/GMAIL
+# Get all Google User List from GAM
+echo "Getting users list from Google. Pls wait..."
+/root/bin/gam/gam print users > /root/GMAIL/gmail_users.lst >/dev/null 2>&1
+sed -i.bk 's/\@barefootnetworks.com//g' gmail_users.lst >/dev/null 2>&1
+
+# Emptying the previous file
+
+cat /dev/null > /root/GMAIL/users_list
+
+# Now generating files for each users
+for USERS in `cat gmail_users.lst`
+do gam info user $USERS | egrep -e address -e User |sed -e 's/^User/mail/' -e 's/address/proxyAddresses/' -e 's/^ //'|sort -r |tee -a /root/GMAIL/USERS/$USERS.gmail 
+done
+
+cd /root/GMAIL/LDIF/
+#Colecting the existing proxy address and DN
+for USERS in `cat ../gmail_users.lst`
+do
+ldapsearch -LLL -b "dc=corp,dc=barefootnetworks,dc=com" -D "Barefoot\ldap_bind" -x -w 'BareF0oT123$#' -h 10.10.10.10 "(samaccountname=$USERS)" dn proxyaddresses | perl -p00e 's/\r?\n //g'|grep -e ^dn -e ^proxy > /root/GMAIL/LDIF/$USERS.ldif
+
+# Pulling exiting LDAP Proxy Address to a tmp file
+grep proxy $USERS.ldif >$USERS.tmp
+
+# Collecting only non existant proxy address in LDAP
+grep -v -x -f $USERS.tmp /root/GMAIL/USERS/$USERS.gmail >$USERS.gmail.new
+
+#  Now Delete the existing LDAP Proxy Line from the file so that it doesn't fail.
+sed -i.bk '/proxyAddresses/d' $USERS.ldif
+
+# Now add the new proxy address line to the ldif file
+cat $USERS.gmail.new |grep ^proxyAddresses >>$USERS.ldif
+sed -i.bk '/proxyAddresses/a -' $USERS.ldif
+sed -i.bk1 '/proxyAddresses/i changetype: modify\nadd: proxyAddresses' $USERS.ldif
+sed -i.bk2 's/modify /modify/' $USERS.ldif
+sed -i.bk3 '2!{/changetype/d;}' $USERS.ldif
+
+
+# Now modify the entries
+#ldapmodify -x -D "Barefoot\ldap_bind" -w 'BareF0oT123$#' -h 10.10.10.10 -f $USERS.ldif
+
+ done

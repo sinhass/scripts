@@ -1,0 +1,27 @@
+# Replacing with Proxy Address
+sed -i.bk 's/^ address/proxyAddresses/g' ssinha.gmail
+
+# Colecting the existing proxy address and DN
+ldapsearch -LLL -b "dc=corp,dc=barefootnetworks,dc=com" -D "Barefoot\ldap_bind" -x -w 'BareF0oT123$#' -h 10.10.10.10 "(samaccountname=ssinha)" dn proxyaddresses | perl -p00e 's/\r?\n //g'|grep -e ^dn -e ^proxy > ssinha.ldif
+
+# Pulling exiting LDAP Proxy Address to a tmp file
+grep proxy ssinha.ldif >ssinha.tmp
+
+# Collecting only non existant proxu address in LDAP
+grep -v -x -f ssinha.tmp ssinha.gmail >ssinha.gmail.new 
+
+#  Now Delete the existing LDAP Proxy Line from the file so that it doesn't fail.
+sed -i.bk '/proxyAddresses/d' ssinha.ldif
+
+# Now add the new proxy address line to the ldif file
+cat ssinha.gmail.new |grep ^proxyAddresses >>ssinha.ldif
+sed -i.bk '/proxyAddresses/a -' ssinha.ldif
+sed -i.bk1 '/proxyAddresses/i changetype: modify\nadd: proxyAddresses' ssinha.ldif
+sed -i.bk2 's/modify /modify/' ssinha.ldif
+sed -i.bk3 '2!{/changetype/d;}' ssinha.ldif
+
+
+# Now modify the entries
+#ldapmodify -x -D "Barefoot\ldap_bind" -w 'BareF0oT123$#' -h 10.10.10.10 -f ssinha.ldif
+
+

@@ -1,0 +1,8 @@
+#!/bin/bash
+echo -n "Type USER_NAME:"
+read USER_NAME
+echo -n "PASSWORD:"
+read PASSWORD
+ENCRYPTPASS=`smbencrypt "$PASSWORD" | awk {'print $2'}`
+NEWSTRING=`"$USER_NAME\t\tNT-Password := \"$encryptpass\"\n"`
+echo $NEWSTRING

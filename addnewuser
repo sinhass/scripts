@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# Collect next availble User/Group ID information from LDAP Server
+
+HIGHEST_UID=`getent passwd | awk -F ":" '{print $3}' | grep -v 65534 |  sort -n | tail -1`
+NEW_UID=$(($HIGHEST_UID + 1))
+
+# Collect First and Last name fo the new user
+	
+echo -n "Enter First Name(Middle name/initial will be discarded):"
+read FIRST_NAME
+FIRST_NAME=$(echo "${FIRST_NAME,,}"|cut -d' ' -f1)
+echo -n "Enter Last Name:"
+read LAST_NAME
+LAST_NAME=$(echo "${LAST_NAME,,}"|cut -d ' ' -f2)
+
+
+AUTO_USER_NAME () {
+
+USER_NAME=${FIRST_NAME:0:1}$LAST_NAME
+getent passwd|awk -F":" '{print $1}'|grep -w $USER_NAME >/dev/null 2>&1
+if [ $? -eq 0 ];then
+  echo "User Name $USER_NAME is not available for use."
+  echo "Trying Firstname as user name.""
+  USER_NAME="$FIRST_NAME"
+  getent passwd|awk -F":" '{print $1}'|grep -w $USER_NAME >/dev/null 2>&1
+    if [ $? -eq 0 ];then
+    echo "Will try to check with firstname and last initial now."
+    USER_NAME="$FIRST_NAME${LAST_NAME:0:1}"
+    getent passwd|awk -F":" '{print $1}'|grep -w $USER_NAME >/dev/null 2>&1
+      if [ $? -eq 0 ];then
+      echo " $USER_NAME also not available. Let me try last name and first initial."
+      USER_NAME=$LAST_NAME${FIRST_NAME:0:1}
+      getent passwd|awk -F":" '{print $1}'|grep -w $USER_NAME >/dev/null 2>&1
+        if [ $? -eq 0 ];then
+        echo "That is not available either. So I will select."
+        USER_NAME=${FIRST_NAME:0:4}${LAST_NAME:0:4}
+        getent passwd|awk -F":" '{print $1}'|grep -w $USER_NAME >/dev/null 2>&1
+          if [ $? -eq 0 ];then
+          echo "I gave up. Please select the user name manually"
+          exit 1
+          fi
+        fi
+      fi
+    fi
+fi
+                }
+
+
+#        PASS_WORD=$(pwgen 10 -y 1)
+
+# Create automatic password
+CREATE_PASSWORD () {
+
+   chars='!%_+='
+   { </dev/urandom LC_ALL=C grep -ao '[A-Za-z0-9]'  | head -n$((RANDOM % 8 + 4))
+      echo ${chars:$((RANDOM % ${#chars})):1}   # Random special char.
+    } | shuf | tr -d '\n'
+
+   }
+
+PASS_WORD=$(CREATE_PASSWORD)
+NEW_UID
+AUTO_USER_NAME
+echo "New User Name:$USER_NAME and UID:$NEW_UID Password:$PASS_WORD"
+
+AUTO_LDAP_USER_CREATION() {
+		echo "Now I will create Unix and openvpn account with this information."
+                smbldap-groupadd -g $NEW_UID $USER_NAME
+                smbldap-useradd -N $FIRST_NAME -S $LAST_NAME -c "$FIRST_NAME $LAST_NAME" -u $NEW_UID -g $NEW_UID -G hw -m $USER_NAME -M "$FIRST_NAME.$LAST_NAME@barefoot.networks.com" -p '$PASS_WORD'
+
+}
+
+
+MANUAL_LDAP_USER_CREATION () {
+        echo "You have decided manual user creation. So check before you hit Enter"
+        echo -n "Enter First Name:"
+        FIRST_NAME=$(echo "${FIRST_NAME,,}"|cut -d' ' -f1)
+        echo -n "Enter Last Name:"
+        read LAST_NAME
+        LAST_NAME=$(echo "${LAST_NAME,,}"|cut -d ' ' -f2)
+        echo -n "Enter user name you want:"
+        read USER_NAME
+        echo -n "Enter email_id:"
+        read EMAILID
+        echo -n "Enter Password:"
+        read PASSWORD
+        echo "Now I will create Unix and openvpn account with this information."
+        smbldap-groupadd -g $NEW_UID $USER_NAME
+        smbldap-useradd -N $FIRST_NAME -S $LAST_NAME -c "$FIRST_NAME $LAST_NAME" -u $NEW_UID -g $NEW_UID -G hw -m $USER_NAME -M "EMAILID" -p '$PASS_WORD'
+}

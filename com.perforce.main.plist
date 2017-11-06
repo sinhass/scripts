@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" 
+      "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+      <key>Label</key>
+      <string>com.perforce.main</string>
+      <key>OnDemand</key>
+      <false/>
+      <key>Program</key>
+        <string>/Users/god/perforce/bin/p4d</string>
+      <key>ProgramArguments</key>
+      <array>
+        <string>p4d [1666]</string>
+        <string>--pid-file</string>
+      </array>
+      <key>EnvironmentVariables</key>
+      <dict>
+            <key>P4ROOT</key><string>/Users/god/perforce/p4root</string>     
+            <key>P4LOG</key><string>/Users/god/perforce/p4log</string>  
+            <key>P4PORT</key><string>1666</string>   
+      </dict>
+      <key>RunAtLoad</key>
+      <true/>
+      <key>ServiceDescriptor</key>
+      <string>Launches main Perforce Server</string>
+</dict>
+</plist>

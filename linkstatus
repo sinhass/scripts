@@ -1,0 +1,83 @@
+#!/usr/bin/ksh
+# Author : Siddhartha S Sinha
+# Rev    : 2.0
+# Date : 08/11/2009
+#
+export TERM=vt320
+HOST_NAME=$(hostname)
+tput clear
+GetYesNo()	{
+	_ANSWER=
+	if  [ $# -eq 0 ]; then
+	echo "Usage: GetYesNo message" 1>&2
+	exit 1
+	fi
+
+while :
+do
+	if [ "`echo -n`" = "-n" ]; then
+		echo "$@\c"
+		else
+			echo -n "$@"
+	fi
+
+	read _ANSWER
+	case "$_ANSWER" in
+		[yY] | yes | YES | Yes)		return 0 ;;
+		[nN] | no  | NO  | No )		return 1 ;;
+		* ) echo "Please Enter y or n."		 ;;
+	esac
+tput clear
+done
+}
+
+lscons -s
+if [ $? -ne 0 ]; then
+echo "Log in to Console and run it from there"
+else
+ {	
+	if [ -r /tmp/linkstatus_result ];then
+	cat /dev/null >/tmp/linkstatus_result
+	else
+	touch /tmp/linkstatus_result
+	fi
+		}
+printf "%-8s %-18s %-19s %-19s\n" "ADAPTER" "STATUS" "SPEED"	"          LOCATION"|tee -a /tmp/linkstatus_result
+printf "%-8s %-7s %-33s %-29s\n" "-------" "------" "--------------------------------" "---------------------------"|tee -a /tmp/linkstatus_result
+ORIGINAL_ADAPTER=$(ifconfig -a|grep -i en|awk '{print $1}'|sed -e '/tcp/d' -e 's/\://g')
+IP=`ifconfig -a|grep -i inet |sed -e '/127\.0\.0\.1/d' -e '/inet6/d' |awk '{print $2}'`
+HEX_SUBNET=`ifconfig -a|grep -i inet | sed -e '/127\.0\.0\.1/d' -e '/inet6/d'| awk '{print $4}'`
+OCT1=`echo $HEX_SUBNET | cut -c 1-4`
+OCT2=0x`echo $HEX_SUBNET | cut -c 5-6`
+OCT3=0x`echo $HEX_SUBNET | cut -c 7-8`
+OCT4=0x`echo $HEX_SUBNET | cut -c 9-10`
+_SUBNET_MASK=`printf "%d.%d.%d.%d\n" $OCT1 $OCT2 $OCT3 $OCT4`
+for i in $(lsdev -Cc adapter -l ent\* -F name)
+do
+NETADAPTER=$i
+ENDEV=$(print $NETADAPTER|sed -e 's/ent/en/g')
+SLOT_LOC=$(lscfg -vpl $NETADAPTER|grep -i Physical|awk -F": " '{print $2}')
+trap "ifconfig $ENDEV down detach && ifconfig $ORIGINAL_ADAPTER $IP netmask $_SUBNET_MASK ;trap 1 2 3 9 15 24 ;exit 0" 1 2 3 9 15 24
+ifconfig $ENDEV up
+sleep 5
+SPEED_RUNNING=$(entstat -d $NETADAPTER|grep -i "Media Speed Running"| awk -F":" '{print $2}'| sed -e 's/^ //g')
+LINK_STATUS=$(entstat -d $NETADAPTER|egrep "Physical Port Link State"|awk -F": " '{print $2}')
+if [[ -z "$LINK_STATUS" ]];then
+LINK_STATUS=$(entstat -d $NETADAPTER|egrep "Link Status" | awk -F": " '{print $2}')
+fi
+printf "%-8s %-7s %-33s %-30s\n" "$NETADAPTER" "$LINK_STATUS" "$SPEED_RUNNING" "$SLOT_LOC"|tee -a /tmp/linkstatus_result
+ifconfig $ENDEV down detach
+done
+ifconfig $ORIGINAL_ADAPTER $IP netmask $_SUBNET_MASK up
+sleep 30
+echo "Network Link Test Completed"
+ {
+	if GetYesNo "Do you want a copy of the test result in your lotusnotes mailbox[y/n] ?";then
+		echo "Type your lotusnoted ID here:\c"
+        	read EMAIL_ID
+		remsh 172.21.64.2 -l docs mailx -s "$HOST_NAME"_Linkstatus Output $EMAIL_ID < /tmp/linkstatus_result >/dev/null 2>&1
+                echo "Now check your lotusnotes mail. Copy available "
+                echo "in /tmp/linkstatus_result file also."
+	fi
+		}
+fi

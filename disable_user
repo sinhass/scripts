@@ -1,0 +1,51 @@
+#!/bin/bash
+
+P4COMMAND=/tools/perforce/2016.2/p4
+P4ADMIN=ssinha
+
+DISABLE_USER_NAME () {
+
+echo -n "I will disable Unix, VPN, WiFi & suspend Gmail Account. Type the Full Name here[Ex. John Doe]:"
+  read FULL_NAME_OF_DISABLE_USER
+
+DISABLE_USER_NAME=$(getent passwd|grep -i "$FULL_NAME_OF_DISABLE_USER" | awk -F":" '{print $1}')
+
+charlen=$(echo ${#DISABLE_USER_NAME})
+  if [ $charlen == 0 ]; then
+     echo "Rerun the tool after finding correct user name. Run getent passwd|egrep 'employee name'"
+     exit 1
+  fi
+  echo "Unix/VPN/WiFi id of $FULL_NAME_OF_DISABLE_USER is $DISABLE_USER_NAME"
+export DISABLE_USER_NAME
+}
+
+COLLECT_GMAIL_ID_FOR_DISABLED_USER () {
+
+  GMAIL_ID_OF_DISABLE_USER1=$(ldapsearch -x -b "dc=barefoot-int,dc=com" "(uid=$DISABLE_USER_NAME)" mail|grep ^mail|awk -F ": " '{print $2}'| cut -d @ -f1)
+  echo "Now I am checking Google if that user exists. May take few seconds."
+  /root/bin/gam/gam info user $GMAIL_ID_OF_DISABLE_USER1 >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+  echo "I found gmail id of $FULL_NAME_OF_DISABLE_USER is: $GMAIL_ID_OF_DISABLE_USER1"
+  fi
+  echo -n "If the above gmail id is correct, then type it here, or type the correct gmail id here:"
+  read GMAIL_ID_OF_DISABLE_USER
+
+  GMAIL_ID_OF_DISABLE_USER=$(echo "$GMAIL_ID_OF_DISABLE_USER"|cut -d @ -f1)
+
+  export GMAIL_ID_OF_DISABLE_USER
+
+}
+
+REMOVE_PERFORCE_CLIENT () {
+  echo "Now I need to the perforce cleanup."
+  OPEN_CLIENTS=$(sudo -i -u $P4ADMIN $P4COMMAND clients -u $DISABLE_USER_NAME |awk '{print $2}'|sort -u)
+  echo "$FULL_NAME_OF_DISABLE_USER has folling open clients:${OPEN_CLIENTS[*]}"
+  echo "CTRL+C to cancel or press Enter to cleanup perforce."
+  echo "If you cancel then you need to do it manually later."
+  read
+  sudo -i -u $P4ADMIN $P4COMMAND clients -u $DISABLE_USER_NAME |awk '{print $2}'|sort -u|while read P4CLIENTS; do sudo -i -u $P4ADMIN $P4COMMAND client -d -f $P4CLIENTS; done
+}
+
+DISABLE_USER_NAME
+COLLECT_GMAIL_ID
+REMOVE_PERFORCE_CLIENT

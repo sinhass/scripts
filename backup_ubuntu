@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# ubuntu Backup Only
+HOST_NAME=$(hostname -s)
+if [ "$HOST_NAME" != yeti ]; then
+   echo "Run from yeti"
+   exit 1
+fi
+PATH=/bin:/usr/bin:/usr/sbin:/sbin:/usr/local/bin
+DATE=$(date +%w%d)
+rsync -aupv --delete --exclude-from /root/ubuntu_exclude.txt  --delete-excluded ubuntu:/var /backups/ubuntu
+rsync -auvp --recursive --delete --exclude-from /root/ubuntu_exclude.txt --delete-excluded ubuntu:/etc /backups/ubuntu
+rsync -aupv --recursive --delete --exclude-from /root/ubuntu_exclude.txt  --delete-excluded ubuntu:/usr /backups/ubuntu
+rsync -aupv --recursive --delete --exclude-from /root/ubuntu_exclude.txt  --delete-excluded ubuntu:/root /backups/ubuntu

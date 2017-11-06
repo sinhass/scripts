@@ -1,0 +1,80 @@
+#!/bin/ksh
+#
+# link performance pmr shell scripts into /usr/bin
+#
+
+BIN=/usr/bin
+
+# check for root id
+$BIN/id | $BIN/grep root > /dev/null 2>&1
+if [ $? -eq 1 ]; then
+  echo "\nInstall: Please obtain root authority and rerun this shell script\n"
+  exit 1
+fi
+
+echo " " 1>&2
+echo "(C) COPYRIGHT International Business Machines Corp., 2000" 1>&2
+echo " " 1>&2
+$BIN/sleep 1
+
+echo "\n    PERFPMR Installation started...\n\n\n"
+if [ "`pwd`" != "/usr/bin" ]; then
+	for i in config.sh emstat.sh filemon.sh iostat.sh iptrace.sh monitor.sh netstat.sh nfsstat.sh perfpmr.sh pprof.sh ps.sh pstat.sh sar.sh svmon.sh tcpdump.sh tprof.sh trace.sh vmstat.sh; do
+	if [ -f $BIN/$i ]; then
+     	grep "COMPONENT_NAME: perfpmr" $BIN/$i >/dev/null && $BIN/rm -f $BIN/$i
+	fi
+	done
+
+# This is the set of scripts to install
+	$BIN/rm -f /usr/bin/perfpmr.sh
+	$BIN/ln -s $PWD/perfpmr.sh /usr/bin/perfpmr.sh
+fi
+$BIN/chmod u+rwx $PWD/perfpmr.sh
+
+check_lpp_reqs()
+{
+  LPPOUT=/tmp/perfpmr.lslpp.l.out
+  /usr/bin/lslpp -l > $LPPOUT
+  grep 'bos.acct' $LPPOUT > /dev/null ||
+    {
+      echo "PERFPMR:  vmstat, iostat, & sar commands are not installed"
+      echo "PERFPMR:  Please install fileset bos.acct"
+    }
+
+  grep 'bos.sysmgt.trace' $LPPOUT > /dev/null ||
+    {
+      echo "PERFPMR:  trace command is not installed"
+      echo "PERFPMR:  Please install fileset bos.sysmgt.trace"
+    }
+
+  grep 'bos.perf.tools' $LPPOUT > /dev/null ||
+    {
+      echo "PERFPMR:  tprof,svmon, filemon, gennames commands are not installed"
+      echo "PERFPMR:  Please install fileset bos.perf.tools"
+    }
+
+
+  grep 'bos.net.tcp.server' $LPPOUT > /dev/null ||
+    {
+      echo "PERFPMR:  iptrace command is not installed"
+      echo "PERFPMR:  Please install fileset bos.net.tcp.server"
+    }
+#  grep 'bos.adt.include' $LPPOUT > /dev/null ||
+#    {
+#      echo "PERFPMR:  /usr/include/sys/lockname.h file is not installed"
+#      echo "PERFPMR:  Please install fileset bos.adt.include"
+#    }
+
+  grep 'bos.perf.tune' $LPPOUT > /dev/null ||
+    {
+      EXIT_YORN=1
+      echo "PERFPMR:  vmo, ioo, & schedo commands are not installed"
+      echo "PERFPMR:  Please install fileset bos.perf.tune"
+    }
+
+  /bin/rm -f $LPPOUT
+}
+
+
+check_lpp_reqs
+echo "    PERFPMR Installation completed.\n"

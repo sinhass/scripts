@@ -1,0 +1,65 @@
+#!/bin/bash
+# Author: Sidhartha S Sinha
+# Barefoot Networks
+#
+clear
+echo "This script will add the user to ssh allow list to a server"
+GetYesNo()      {
+        _ANSWER=
+        if  [ $# -eq 0 ]; then
+        echo "Usage: GetYesNo message" 1>&2
+        exit 1
+        fi
+
+while :
+do
+        if [ "`echo -n`" = "-n" ]; then
+                echo "$@\c"
+                else
+                        echo -n "$@"
+        fi
+
+        read _ANSWER
+        case "$_ANSWER" in
+                [yY] | yes | YES | Yes)         return 0 ;;
+                [nN] | no  | NO  | No )         return 1 ;;
+                * ) echo "Please Enter y or n."          ;;
+        esac
+     tput clear
+done
+}
+
+echo -n "SERVER NAME: "
+read HOST_NAME
+echo -n "USER NAME : "
+read USER_NAME
+FILE_NAME=/etc/ssh/sshd_config
+check_hostname () {
+                   nslookup $HOST_NAME 2>&1 >/dev/null
+                     if [ $? -ne 0 ];then
+                       echo "Please check the Server Name Again"
+                     exit 255              
+		    fi
+                   getent passwd |grep $USER_NAME 2>&1 >/dev/null
+		     if [ $? -ne 0 ];then
+                       echo "Please check the User Name again."
+                      exit 255
+                     fi  
+              } 
+                     
+check_hostname
+if [ $? -eq 0 ];then
+     ssh -q $HOST_NAME -o ConnectTimeout=2 "cat $FILE_NAME |grep -w $USER_NAME" 2>&1 >/dev/null
+	if [ $? -ne 0 ];then
+     	    ssh -q $HOST_NAME -o ConnectTimeout=2 "perl -pi.bk -pe 's/AllowUsers.*\K/ $USER_NAME/;' $FILE_NAME && service sshd restart 2>&1 >/dev/null"
+               if [ $? -eq 0 ];then
+        	  echo "User name:$USER_NAME successfully addded to the Server:$HOST_NAME."
+               else
+                  echo "Something is wrong please do it manually."
+               fi
+        else
+            echo "User name:$USER_NAME already has access to $HOST_NAME Server."
+        fi
+else
+   echo "Please check the hostname/username again." 
+fi

@@ -1,0 +1,30 @@
+#!/bin/ksh
+
+cd /tmp
+tar -xvf /dev/fd0 > /dev/null 2>&1
+/tmp/mkdir -p /usr/lpp/htx/etc/kernext
+cp mps_intr /usr/lpp/htx/etc/kernext
+for dev in `lsdev -C -s mca | grep 8fa2 |awk '{print substr($1,4)}'`
+do
+	./loadkernext /usr/lib/drivers/diagex  > /dev/null 2>&1
+	./loadkernext mpskex  > /dev/null 2>&1
+	./hxemps /dev/tok${dev} OTH rule.load 
+	./hxemps /dev/tok${dev} OTH rule 
+	./unloadkernext /usr/lib/drivers/diagex  
+	./unloadkernext mpskex   
+	chdev -l tok${dev} -a ring_speed=autosence
+done
+cd /tmp
+#rm -fr /tmp/download
+rm -fr /usr/lpp/htx/etc/kernext/mps_intr
+rm -f hxemps
+rm -f load
+rm -f mkdir
+rm -f loadkernext
+rm -f unloadkernext
+rm -f mps.msg
+rm -f rule
+rm -f rule.load
+rm -f wildwood.microcode
+rm -f mpskex
+rm -f mps_intr
