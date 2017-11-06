@@ -1,0 +1,1016 @@
+#!/bin/ksh
+
+SCRAPE_VER=2.8
+
+sep_line()
+{
+echo "######################################################################"
+}
+sep_line2()
+{
+echo "--------------------------------------------------------------------"
+}
+sep_line3()
+{
+echo "----------------------------------"
+}
+
+ibm_delivery()
+{
+ sep_line
+ printf "%-7s %-8s %49s %-5s \n" '# Date:' $DRDATE 'scrape Version:' $SCRAPE_VER
+ sep_line
+ print "# Intellectual Property of IBM Corporation. "
+ print "# Protected by U.S. Patent 6,636,988 and other international patents."
+ print "# All Rights Reserved."
+ print "#"
+ print "# (c) 1998-2003 International Business Machines Corporation."
+ print "#     All rights reserved. "
+ sep_line
+}
+
+
+ver_check()
+{
+
+CHECK=$3
+#
+ case "$1" in
+   snapshot) SNAPSHOT="YES";
+   shift;;
+   standard) SNAPSHOT="";
+   shift;;
+   *) SNAPSHOT="";;
+ esac
+
+ LATEST_RELEASE=$SCRAPE_VER
+ pname="$0"
+ current_dir=$PWD
+ clear
+}
+
+#####################################################################
+# Checks for scrape version on internal server: 
+# (bcrsgia.wma.ibm.com) if down level transfers latest then installs 
+#####################################################################
+check_for_latest_version()
+{
+
+ trap 'rm -f /tmp/versions.txt; exit' 1 2 15
+
+ BCRS_SERVER=bcrsgai.wma.ibm.com
+ LATEST_VER=0
+
+ get_latest()
+ { 
+  cd /$HOME
+  print "\nPlease wait, retreiving latest 'scrape' version.\n"
+  print "machine $BCRS_SERVER" > .netrc
+  print "\t login delivery"    >> .netrc
+  print "\t password support"  >> .netrc
+  print ""                     >> .netrc
+  print "macdef latest"        >> .netrc
+  print "\t bin"               >> .netrc
+  print "\t lcd /tmp"          >> .netrc
+  print "\t get extract_rdws_tools.tar" >> .netrc
+  print "\t quit"              >> .netrc
+  print "\n"                   >> .netrc
+  if [[ -f /.netrc ]]; then
+   chmod 600 /.netrc
+  fi 
+  cd /tmp
+  if [[ -f extract_rdws_tools.tar ]]; then
+   rm -f extract_rdws_tools.tar
+  fi
+  echo "\$ latest" | ftp $BCRS_SERVER 
+  if (( $? == 0 )); then
+   cd /tmp
+   sep_line3
+   print "Installing 'scrape' script."
+   tar -xvf /tmp/extract_rdws_tools.tar 2>/dev/null
+   if (( $? == 0 )); then
+    if [[ $current_dir != /tmp ]]; then
+     cp -rf /tmp/scrape /$current_dir 
+    fi
+   fi
+   sep_line3
+  else
+    print "\a\nDownload of 'extract_rdws_tools.tar' FAILED!\n"
+  fi
+  
+ }
+
+ ver_check snapshot check
+ sep_line2
+ print "\t\t  CHECKING FOR CURRENT VERSION"
+ sep_line2
+ print "\nCurrent running 'scrape' version: $SCRAPE_VER \n"
+ print "Checking for latest version at: $BCRS_SERVER\n"
+ cd /$HOME
+ if [[ -f .netrc ]]; then
+  cp .netrc .netrc.orig
+ fi 
+ if [[ -f /tmp/versions.txt ]]; then
+  mv -f /tmp/versions.txt /tmp/version.orig
+ fi
+ print "machine $BCRS_SERVER" > .netrc
+ print "\t login version"    >> .netrc
+ print "\t password check"   >> .netrc
+ print ""                    >> .netrc
+ print "macdef checkversion" >> .netrc
+ print "\t asci"             >> .netrc
+ print "\t lcd /tmp"         >> .netrc
+ print "\t get versions.txt" >> .netrc
+ print "\t quit"             >> .netrc
+ print "\n"                  >> .netrc
+ print "macdef latest" >> .netrc
+ print "\t bin"             >> .netrc
+ print "\t get extract_rdws_tools.tar" >> .netrc
+ print "\t quit"             >> .netrc
+ print "\n"                  >> .netrc
+ if [[ -f .netrc ]]; then
+  chmod 600 .netrc
+  ping -c 1 $BCRS_SERVER 50 2>/dev/null 1>/dev/null
+  if (( $? == 0 )); then
+  print "Please wait, retreiving version info now!"
+  echo "\$ checkversion" | ftp $BCRS_SERVER 
+  if (( $? == 0 )); then
+   if [[ -f /tmp/versions.txt ]]; then
+    LATEST_VER=`awk ' /^scrape/ {print $0}' /tmp/versions.txt |\
+    awk -F":" '{print $2}'`
+    print "\nChecking current version against latest version\n"
+    sep_line3
+    print "Current verion: $SCRAPE_VER"
+    print "Latest version: $LATEST_VER"
+    sep_line3
+    if (( $(echo "scale=1; $LATEST_VER * 100" | bc) > $(echo "scale=1; $SCRAPE_VER * 100" | bc) )); then
+      print "\a\nLater version available, would you like to download and install it now?"
+     print "\nEnter Y/N \c"
+     while read input; do
+      case $input in
+      Y|y) get_latest
+           break;;
+      N|n) print "\nExiting 'scrape' run!\n"
+         exit 1;;
+      *) ;;
+      esac
+     printf "Enter Y/N  \a"
+     done
+
+    else
+     print "\nCurrently at current or later release level!\n"
+     rm -f /tmp/versions.txt
+     rm -f /.netrc
+    fi
+    
+    print "\nTransfer complete!\n"
+    rm -f /tmp/versions.txt
+   fi
+
+   if [[ -f /.netrc.orig ]]; then
+    mv /.netrc.orig /.netrc
+   else
+    rm -f /.netrc
+   fi 
+  fi 
+
+  else
+   print "\aNot on the IBM Internal network!\n"
+   exit 1
+  fi
+
+ else
+  print "Error!  Could not find .netrc files!"
+  exit 1
+ fi
+
+}
+
+
+####################################################################
+#### Returns:  $VGN
+####################################################################
+find_vgn() 
+{
+ k=0
+ VGN=""
+ SUNVG=""
+ RBLD=$1
+ LLST=$2
+ CPWD=$3
+ EXCLUDES=""
+ SSA_RAID_DASD=""
+ SSA_RAID_TYPE=""
+ SSA_DASD=""
+ VPATH_DASD=""
+ SHARK_DASD=""
+ SCSI_DASD=""
+ EMC_DASD=""
+ HITACHI_DASD=""
+ FC_SCSI_DASD=""
+ FAStT_DASD=""
+
+ trap 'rm -f $CPWD/INFO.out ; exit' 1 2 15
+
+ VGN=`awk '/^VG_DISKS/ {print $0}' $RBLD |sed -es!"VG_DISKS:"!" "!g | sed -es!";"!" "!g`
+ #echo "VGN: $VGN"
+
+ ## CHECK FOR VERSION OF SNAPSHOT TOOL
+ DR_SNAP_VER=`awk -F":" ' / dr_snapshot.sh Version: / {print $3}' $RBLD`
+ if [[ ! -n $DR_SNAP_VER ]]; then
+  DR_SNAP_VER=24
+ else
+  DR_SNAP_VER=`echo "$DR_SNAP_VER * 100" | bc`
+  DR_SNAP_VER=`echo $DR_SNAP_VER`
+  DR_SNAP_VER=`echo "$DR_SNAP_VER / 10" | bc`
+  DR_SNAP_VER=`echo $DR_SNAP_VER`
+ fi
+
+ if [[ -n $VGN ]]; then 
+
+ if [[ $OSTYPE = SunOS ]]; then
+ print "# Disk Groups :" >> $CPWD/INFO.out
+
+ TOTAL_DISK=0
+ total_disk_size=0
+ sep_line >> $CPWD/INFO.out
+ pr -5 -t -w78 -l1 - << END >> $CPWD/INFO.out
+# DG Name
+DG Type
+Pdisks
+Type
+Size(GB)
+END
+ sep_line >> $CPWD/INFO.out
+
+ SUNVG=`echo "$VGN" | awk '! /^ c[0-9]*t[0-9]*d[0-9]*s*/ {print $0}' |awk -F":" '{print $1}' | sort -u `
+
+ for y in `echo $SUNVG`; do
+  vg_numb=""
+  vg_tsize=0
+  vg_dasd_type=1
+  vg_name=`echo "$y" | awk -F"@" '{print $1}'`
+  vg_type=`echo "$y" | awk -F"@" '{print $2}'`
+ 
+  if [[ ! -n $vg_numb ]]; then vg_numb=`echo $vg_numb`
+   if [[ $vg_type = sun && $vg_name = rootvg ]]; then
+    vg_numb=`echo "$VGN" | awk -F":" '/'$y'/ {print $2}'|sed -es!s[0-9]!!g |sort -u`
+    vg_numb=`echo "$vg_numb" | wc -l` 
+    vg_numb=`echo $vg_numb`
+   else
+    vg_numb=`echo "$VGN" | awk '/'$y'/ {print $0}' | wc -l` 
+    vg_numb=`echo $vg_numb`
+   fi
+   vg_dasd=`echo "$VGN" | awk '/'$y'/ {print $0}' | awk -F":" '{print $6}'|sort -u`
+   vg_dasd_type=`echo "$vg_dasd" |wc -l`
+   vg_dasd_type=`echo $vg_dasd_type`
+   if (( $vg_dasd_type > 1 )); then
+    vg_dasd=`echo "$vg_dasd" | sed -es!UNKNOWN!!g`
+    ## CHECK FOR ADDITIONAL TYPES
+    if [[ -n `echo "$vg_dasd" | egrep -i SUN` ]]; then
+     vg_dasd=SUN
+    fi
+   fi
+   
+   (( TOTAL_DISK = $TOTAL_DISK + $vg_numb ))
+
+   if [[ $vg_dasd = UNKNOWN ]]; then
+    ## LOOK FOR TYPE
+    FOUND=""
+    vg_dasd=`echo "$VGN" | awk '/'$vg_name'/ {print $0}' | awk -F":" '{print $3}'`
+    for z in `echo "$vg_dasd" | sed -es!s[0-9]*!!g`; do
+     FOUND=`echo "$VGN" | awk -F":" '/'$z'\@/ {print $5}'` 
+     if [[ -n $FOUND ]]; then
+     
+     ### LOOK FOR SHARK FC/SCSI
+      if [[ -n `echo "$FOUND" | grep "IBM-2105"` ]]; then
+       vg_dasd="IBM-2105"
+       break
+      else
+       if [[ -n `echo "$FOUND" | grep "FUJITSU"` ]]; then
+        vg_dasd="FUJITSU"
+        break
+       else
+        if [[ -n `echo "$FOUND" | egrep "Symbios|StorEDGE"` ]]; then
+         vg_dasd="SUN"
+         break
+        else
+        if [[ -n `echo "$FOUND" | egrep "FAStT|1722|1742|3542|3552"` ]]; then
+         vg_dasd="FAStT"
+         break
+        else
+         vg_dasd=$FOUND
+         break
+        fi
+        fi
+       fi
+      fi
+
+     fi
+    done
+   fi
+  fi
+
+  for z in `echo "$VGN" | awk '/'$y'/ {print $0}' | awk -F":" '{print $4}'`; do
+   (( vg_size = $z / 2048 )) 
+   (( vg_tsize = $vg_tsize + $vg_size )) 
+  done
+
+  vg_gb_size=`echo "scale=2; $vg_tsize / 1000" | bc` 
+  total_disk_size=`echo "scale=2; $total_disk_size + $vg_gb_size" | bc`
+
+  ### BUILD VG ARRAY 
+  pr -5 -t -w78 -l1 - << END >> $CPWD/INFO.out
+# $vg_name
+$vg_type
+$vg_numb
+$vg_dasd
+$vg_gb_size 
+END
+ done
+fi
+
+if [[ $OSTYPE = AIX ]]; then
+ print "# Volume Groups :" >> $CPWD/INFO.out
+ pr -6 -t -w78 -l1 - << END >> $CPWD/INFO.out
+# VG Name
+PP Size
+ConCap
+Pdisks
+Type
+Size(GB)
+END
+
+ #### CAPTURE DASD IN *.long_listing
+ DASD=`awk '/^hdisk|^vpath|^hdiskpower|^dlmfdrv/ {print $0}' $LLST | awk '/Available/ {print $0}' | sort -u -d -k1`
+
+ #### CAPTURE DASD IN SSARAID
+ SSA_RAID_DASD=`awk '/^SSA_RAID/ {print $0}' $RBLD |sed -es!"SSA_RAID:"!!g|sed -es!";:"!!g | sed -es!";"!!g`
+
+ if [[ -n $SSA_RAID_DASD ]]; then
+ SSA_RAID_TYPE=""
+  if (( DR_SNAP_VER >= 28 )); then
+   for i in `echo $SSA_RAID_DASD`; do
+    ssar_cards=`echo $i | awk -F":" '{print $1}'`
+    ssar_devices=`echo $i | sed -es!"$ssar_cards:"!" "!g`
+    ssar_raid0=`echo $ssar_devices | sed -es!"raid_0"!" raid_0"!g`
+    ssar_raid1=`echo $ssar_raid0 | sed -es!"raid_1"!" raid_1"!g`
+    ssar_raid5=`echo $ssar_raid1 | sed -es!"raid_5"!" raid_5"!g`
+    ssar_raid10=`echo $ssar_raid5 | sed -es!"raid_10"!" raid_10"!g`
+    ssar_types=`echo $ssar_raid10`
+    for j in $ssar_types; do
+     array_type=`echo $j | awk -F: '{print $1}'`
+     array_setting=`echo $j|sed -es!"$array_type"!" "!g`
+     for l in $(echo "$array_setting"|sed -es!":hdisk"!" hdisk"!g); do
+      raid_array=`echo $l | awk -F":" '{print $1}'`
+      SSA_RAID_TYPE="$raid_array $SSA_RAID_TYPE \c"
+     done
+    done
+   done
+  else
+   for i in `echo $SSA_RAID_DASD`; do
+    ssar_cards=`echo $i | awk -F":" '{print $1}'`
+    ssar_devices=`echo $i | sed -es!"$ssar_cards:"!" "!g`
+    ssar_raid0=`echo $ssar_devices | sed -es!"raid_0"!" raid_0"!g`
+    ssar_raid1=`echo $ssar_raid0 | sed -es!"raid_1"!" raid_1"!g`
+    ssar_raid5=`echo $ssar_raid1 | sed -es!"raid_5"!" raid_5"!g`
+    ssar_raid10=`echo $ssar_raid5 | sed -es!"raid_10"!" raid_10"!g`
+    ssar_types=`echo $ssar_raid10`
+    for j in $ssar_types; do
+     array_type=`echo $j | awk -F: '{print $1}'`
+     array_setting=`echo $j|sed -es!"$array_type"!" "!g`
+     for l in $(echo "$array_setting"|sed -es!":-hdisk"!" hdisk"!g); do
+      raid_array=`echo $l | awk -F":" '{print $1}'`
+      SSA_RAID_TYPE="$raid_array $SSA_RAID_TYPE \c"
+     done
+    done
+   done
+  fi
+ fi
+
+ #### CAPTURE DASD IN SSA
+ if [[ -n $SSA_RAID_TYPE ]]; then
+  for i in `echo $SSA_RAID_TYPE`; do
+  EXCLUDES="$EXCLUDES |$i "
+  done
+  EXCLUDES=`echo $EXCLUDES | sed -es!"^|"!!g`
+ fi
+
+ if [[ -n $EXCLUDES ]]; then
+  SSA_DASD=`echo "$DASD" | awk ' /SSA/ {print $0}' | egrep -v "$EXCLUDES"`
+ else
+  SSA_DASD=`echo "$DASD" | awk ' /SSA/ {print $0}'`
+ fi
+ 
+ #### CAPTURE DASD IN VPATH ESS
+ VPATH_DASD=`echo "$DASD" | awk ' /^vpath/ {print $0}'` 
+ 
+ #### CAPTURE DASD IN 2105 ESS
+ SHARK_DASD=`echo "$DASD" | awk ' /hdisk/ {print $0}' |awk ' /2105/ {print $0}'`
+
+ #### CAPTURE DASD IN SCSI
+ SCSI_DASD=`echo "$DASD"|awk ' !/hdiskpower|Other/ {print $0}'|awk ' /SCSI/ {print $0}'`
+
+ #### CAPTURE HDISK IN EMC 
+ EMC_DASD=`echo "$DASD" | awk ' /^hdiskpower/ {print $0}'`
+ if [[ -n $EMC_DASD ]]; then
+  EMC_DASD="$EMC_DASD \n `echo "$DASD" | awk ' /hdisk/ {print $0}' |awk ' /EMC/
+{print $0}'`"
+ else
+ #### CAPTURE HDISK IN EMC
+  EMC_DASD=`echo "$DASD" | awk ' /hdisk/ {print $0}' |awk ' /EMC/ {print $0}'`
+ fi
+
+ #### CAPTURE HDISK IN HITACHI
+ HITACHI_DASD=`echo "$DASD" | awk ' /^dlmfdrv/ {print $0}'`
+ if [[ -z $HITACHI_DASD ]]; then
+  HITACHI_DASD=`echo "$DASD" | awk ' /Hitachi|HITACHI/ {print $0}'`
+ fi
+
+ ### CAPTURE HDISK IN FC_SCSI
+ FC_SCSI_DASD=`echo "$DASD" | awk ' /FC SCSI Disk/ {print $0}'`
+
+ ### CAPTURE HDISK IN FAStT
+ FAStT_DASD=`echo "$DASD" | awk ' /FAStT|1722|1742|3542|3552/ {print $0}'`
+
+ #### CAPTURE HDISK IN OLD SSA SERIAL DISK
+ SSA_SERIAL=`echo "$DASD" | grep -i "Serial-Link"`
+
+ smallest_size=0 
+ for i in `echo $VGN`; do
+  vg_tsize=0
+  vg_numb=0
+  vg_hdsize=""
+  vg_type=""
+  vg_name=`echo $i | awk -F"@" '{print $1}'`
+  vg_ppsiz=`echo $i | awk -F"@" '{print $2}'|awk -F"-" '{print $1}'`
+  vg_conca=`echo $i | awk -F"@" '{print $2}'|awk -F"-" '{print $2}'`
+  vg_hdisk=`echo $i | awk -F"@" '{print $2}'|awk -F"-" '{print $3}'` 
+  TYPE_FOUND=NO
+
+  for j in `echo $vg_hdisk | sed -es!","!" "!g`; do
+   disk_name=`echo $j|awk -F":" '{print $1}'`
+
+    ### LOOK FOR VPATH ESS
+    if [[ -n $VPATH_DASD && $TYPE_FOUND = NO ]]; then
+     echo "$VPATH_DASD" | grep "$disk_name " 2>/dev/null 1>/dev/null
+     if (( $? == 0 )); then
+      vg_type="ESS/VPATH"
+      break
+     fi 
+    fi 
+
+    ### LOOK FOR 2105 ESS 
+    if [[ -n $SHARK_DASD && $TYPE_FOUND = NO ]]; then
+     echo "$SHARK_DASD" | grep "$disk_name " 2>/dev/null 1>/dev/null
+     if (( $? == 0 )); then
+      vg_type="ESS/2105"
+      break
+     fi 
+    fi 
+
+    ### LOOK FOR SSA 
+    if [[ -n $SSA_DASD && $TYPE_FOUND = NO ]]; then
+     echo "$SSA_DASD" | grep "$disk_name " 2>/dev/null 1>/dev/null
+     if (( $? == 0 )); then
+      vg_type="SSA"
+      break
+     fi 
+    fi 
+    
+    ### LOOK FOR SSARAID 
+    if [[ -n $SSA_RAID_TYPE && $TYPE_FOUND = NO ]]; then
+     echo "$SSA_RAID_TYPE" | grep "$disk_name " 2>/dev/null 1>/dev/null
+     if (( $? == 0 )); then
+      vg_type="SSARAID"
+      break
+     fi 
+    fi 
+
+    ### LOOK FOR SCSI 
+    if [[ -n $SCSI_DASD && $TYPE_FOUND = NO ]]; then
+     echo "$SCSI_DASD" | grep "$disk_name " 2>/dev/null 1>/dev/null
+     if (( $? == 0 )); then
+      vg_type="SCSI"
+      break
+     fi 
+    fi 
+
+    ### LOOK FOR EMC
+    if [[ -n $EMC_DASD && $TYPE_FOUND = NO ]]; then
+     echo "$EMC_DASD" | grep "$disk_name " 2>/dev/null 1>/dev/null
+     if (( $? == 0 )); then
+      vg_type="EMC"
+      break
+     fi 
+    fi 
+
+    ### LOOK FOR HITACHI
+    if [[ -n $HITACHI_DASD && $TYPE_FOUND = NO ]]; then
+     if [[ -n `echo "$HITACHI_DASD" | grep "$disk_name "` ]]; then
+      vg_type="HITACHI"
+      break
+     fi
+    fi
+
+    ### LOOK FOR HITACHI/EMC/SHARK FC SCSI
+    if [[ -n $FC_SCSI_DASD && $TYPE_FOUND = NO ]]; then
+     if [[ -n `echo "$FC_SCSI_DASD" | grep "$disk_name "` ]]; then
+      vg_type="FC_SCSI"
+      break
+     fi
+    fi
+
+    ### LOOK FOR FAStT
+    if [[ -n $FAStT_DASD && $TYPE_FOUND = NO ]]; then
+     if [[ -n `echo "$FAStT_DASD" | grep "$disk_name "` ]]; then
+      vg_type="FAStT"
+      break
+     fi
+    fi
+
+   ### LOOK FOR SSA SERIAL
+   if [[ -n $SSA_SERIAL ]]; then
+    echo "$SSA_SERIAL" | grep "$disk_name " 2>/dev/null 1>/dev/null
+    if (( $? == 0 )); then
+     vg_type="SERIAL"
+     break
+    fi
+   fi
+
+   ### ALL ELSE TYPE OF 'UNKNOWN'
+   if [[ $TYPE_FOUND = NO ]]; then
+     vg_type="UNKNOWN"
+     break
+   fi 
+     
+   done
+
+   for j in `echo $vg_hdisk | sed -es!","!" "!g`; do
+    (( vg_tsize = $vg_tsize + $(echo $j | awk -F":" '{print $2}') ))
+    (( vg_numb = $vg_numb + 1 ))
+   done
+    
+   vg_gb_size=`echo "scale=2; $vg_tsize / 1000" | bc` 
+
+   ### BUILD VG ARRAY 
+   pr -6 -t -w78 -l1 - << END >> $CPWD/INFO.out
+# $vg_name
+$vg_ppsiz
+$vg_conca
+$vg_numb
+$vg_type
+$vg_gb_size 
+END
+ done
+
+ fi
+ fi
+
+}
+
+find_info()
+{
+i=$1
+CPWD="$2"
+OSR_LEV=""
+VXFSV=""
+VXVMV=""
+
+FN=`ls $i* | egrep -v "\.df|\.rdws|\.sdr|\.tar|\.settings|\.errpt|\.log|\.long_listing|\.ess|\.rebuild|\.commands|\.ssa|\.HACMP_conf|\.exclude|\.bin|\.z|\.Z|\.out|\.html|\.tmp|\.nfs|\.splstdata"`
+
+trap 'rm -f $CPWD/INFO.out $CPWD/DISK*.out ; exit' 1 2 15
+
+RBLD=`ls $i* | egrep ".rebuild"`
+LLST=`ls $i* | grep ".long_listing"`
+RDWS=`ls $i*.rdws`
+DN=`awk -F":" '/^\# Host Name/ {print $2}' $FN`
+DN=`echo $DN`
+
+OSTYPE=`awk -F"=" '/^\*SYSARCHITECTURE=/ {print $2}' $RDWS`
+if [[ $OSTYPE = pSERIES ]]; then
+  OSTYPE=AIX
+fi
+
+sep_line >> $CPWD/INFO.out
+printf "%-20.19s%6.2s %-18.17s\n" "# Hostname" : "$DN" >> INFO.out
+grep "Model Information" $FN >> INFO.out
+grep "Memory Information" $FN >> INFO.out
+grep "Paging Information" $FN >> INFO.out
+grep "Processor Type" $FN >> INFO.out
+PROC_SPEED=`awk ' /Processor Speed/ {print $0}' $FN`
+if [[ -n $PROC_SPEED ]]; then
+ print "$PROC_SPEED" >> INFO.out
+fi
+grep "Processor Info" $FN >> INFO.out
+grep "Bus Type" $FN >> INFO.out
+if [[ -n $OSTYPE ]]; then
+ printf "%-20.19s%6.2s %-18.17s\n" "# OS Type" : "$OSTYPE" >> INFO.out
+fi
+awk '/OS Level/ {print $0}' $FN >> INFO.out
+OSR_LEV=`awk ' /OS Release Level/ {print $0}' $FN`
+if [[ -n $OSR_LEV ]]; then
+ print "$OSR_LEV" >> INFO.out
+fi
+VXVMV=`awk ' /\# Veritas vxvm Level / {print $0}' $FN`
+if [[ -n $VXVMV ]]; then
+ print "$VXVMV" >> INFO.out
+fi
+VXFSV=`awk ' /\# Veritas vxvfs Level / {print $0}' $FN`
+if [[ -n $VXFSV ]]; then
+ print "$VXFSV" >> INFO.out
+fi
+KERNL_TYPE=`awk ' /Kernel Type/ {print $0}' $FN`
+if [[ -n $KERNL_TYPE ]]; then
+ print "$KERNL_TYPE" >> INFO.out
+fi
+PSSP_INFO=`awk '/PSSP Level/ {print $0}' $FN`
+if [[ -n $PSSP_INFO ]]; then
+  print "$PSSP_INFO" >> INFO.out
+fi
+
+if [[ $OSTYPE = SunOS ]]; then
+ int_face="le|hme|qe|qfe|ge|ce|vge|ba|nf|idn|eri|tr|fjgi|fjge"
+ awk ' / U / && /'$int_face'[0-9]/ {print $0}' $FN >> INFO.out
+ print "# \c" >> INFO.out
+ sep_line2 >> INFO.out
+ awk '/\# Total Size In Use/ {print $0}' $FN  >> INFO.out
+fi
+
+if [[ $OSTYPE = AIX ]]; then
+ int_face="en|at|tr|css"
+ awk ' /;U;/ && /'$int_face'[0-9]/ {print $0}' $FN >> INFO.out
+ awk ' /ARTIC/ {print $0}' $FN  >> INFO.out 
+ print "# \c" >> INFO.out
+ sep_line2 >> INFO.out
+ grep "Total System Storage" $FN >> INFO.out
+fi
+
+print "# \c" >> INFO.out
+sep_line2 >> INFO.out
+
+find_vgn $RBLD $LLST $CPWD
+
+print "# \c" >> INFO.out
+sep_line2 >> INFO.out
+
+
+if [[ $OSTYPE = AIX ]]; then
+
+ SYSTEM_DISKS=`awk ' /VG_DISKS:/ {print $0}' $FN.rebuild | sed -es!";"!" "!g | sed -es!"VG_DISKS:"!""!g` 
+
+ rm -f DISKS.out DISKS2.out DISKS3.out DISKS4.out
+fi
+
+if [[ $OSTYPE = SunOS ]]; then
+ VGN=`awk ' /VG_DISKS:/ {print $0}' $FN.rebuild | sed -es!";"!" "!g | sed -es!"VG_DISKS:"!""!g` 
+ SYSTEM_DISKS=`echo "$VGN" | awk '!/^c[0-9]*t[0-9]*d[0-9]*s*/ {print $0}' |awk -F":" '{print $1}' | sort -u `
+
+ DASDTMP=`grep "Total Size In Use: " $FN |awk -F":" '{print $3}'`
+ DASD=`echo $DASDTMP | sed -es!"(GB)"!""!g`
+ DASD=`echo $DASD`
+
+ rm -f DISKS.out DISKS2.out DISKS3.out DISKS4.out
+fi
+
+ ## FIND UNIQUE DISK/SIZE/NUMBERS
+ for j in $SYSTEM_DISKS
+  do
+  rm -f DISKS.out
+
+  if [[ $OSTYPE = AIX ]]; then
+   VG_NAME=`echo $j | awk -F"@" '{print $1}'`
+   VG_DISK=`echo $j | awk -F"-" '{print $3}' | sed -es!","!" "!g`
+   for k in $VG_DISK; do
+    print "$k:" >> DISKS.out
+   done
+   if [[ -f DISKS.out ]]; then
+    VG_DISK=`cat DISKS.out`
+    rm -f DISKS.out
+   fi
+  fi
+
+  if [[ $OSTYPE = SunOS ]]; then
+   VG_NAME=`echo $j | awk -F"@" '{print $1}'`
+   VG_DISK=`echo "$VGN" | awk -F":" '/'$VG_NAME'@/ {print $3}' |\
+    sed -es!"s[0-9]"!""!g`
+   for k in $VG_DISK; do
+    DISK_TMP=`awk '/VG_DISKS:/ {print $0}' $RBLD |\
+     awk -F":" '/'$k'@/ {print $2,$3,$4,$5}' | sed -es!"@"!" "!g`
+    bytes_sect=`echo "$DISK_TMP" | awk '{print $2}'`
+    sector_cyl=`echo "$DISK_TMP" | awk '{print $3}'`
+    access_cyl=`echo "$DISK_TMP" | awk '{print $4}'`
+    (( pv_size = $sector_cyl * $access_cyl ))
+    total=`echo " $bytes_sect / 2 * $sector_cyl * $access_cyl "|bc`
+    total=`echo " $total * 2 / 1000 / 1000" | bc`
+    print "$k:$total:" >> DISKS.out
+   done
+   if [[ -f DISKS.out ]]; then
+    VG_DISK=`cat DISKS.out`
+    rm -f DISKS.out
+   fi
+  fi
+ 
+  echo "# $VG_NAME:" >> $CPWD/INFO.out
+  echo "$VG_DISK" >> DISKS.out
+
+  if [[ -f DISKS.out ]]; then 
+   awk -F":" '{print $2}' DISKS.out | sort -u > DISKS2.out
+   for l in `cat DISKS2.out`; do
+    disks=`awk ' /:'$l':/ {print $0}' DISKS.out`
+    print "$l" >> DISKS3.out
+    disk_num=0
+    disk_num=`echo "$disks" | wc -l`
+    disk_num=`echo $disk_num`
+
+    echo "$disk_num:$l" |\
+    awk -F":" '{printf("# %4.3s x %.2f GB\n", $1 ,$2/1000)}' >> $CPWD/INFO.out
+
+    print "$l:$disk_num" >> DISKS4.out
+   done
+
+   print "# \c" >> $CPWD/INFO.out
+   sep_line3 >> $CPWD/INFO.out
+  fi 
+  done
+
+  tot_disks="# Total Disks"
+  semi_coll="  :"
+  total_ddd="Total DASD"
+
+  pr -3 -t -w 40 -l1 - << END >> $CPWD/INFO.out
+$tot_disks
+$semi_coll
+$total_ddd
+END
+
+  print "# \c" >> $CPWD/INFO.out
+  sep_line3 >> $CPWD/INFO.out
+ 
+  if [[ -f DISKS3.out ]]; then
+
+   for i in `sort -n -u DISKS3.out`; do
+    tot_num=0
+    tot_num=`awk -F":" 'BEGIN {a=0} /'$i':/ {a=a+$2} END {print a}' DISKS4.out` 
+    printf "%-2s %6s %6s %18s \n" "#" $tot_num x $i >> $CPWD/INFO.out
+   done
+
+  fi
+
+ print "# \c" >> $CPWD/INFO.out
+ sep_line2 >> $CPWD/INFO.out
+ if [[ $OSTYPE = AIX ]]; then
+  tot_disk=`grep "Total Disk Number" $FN | awk -F":" '{print $2}'`
+  TOT_DASD=`grep "Total System Storage" $FN | awk -F":" '{print $2":"$3}'`
+ fi
+ if [[ $OSTYPE = SunOS ]]; then
+  tot_disk=`awk -F":" 'BEGIN {a=0} {a=a+$2} END {print a}' DISKS4.out` 
+  TOT_USED=`grep "Total Size In Use" $FN` 
+ # TOT_DASD=`grep "Total Size In Use" $FN | awk -F":" '{print $2":"$3}'`
+  TOT_DASD=`awk -F":" 'BEGIN {a=0} {b=$1*$2} {a=a+b} END {printf("%s\(MB\):%s\(GB\)\n"), a, a/1000}' DISKS4.out` 
+  TOT_DASD=`echo "$TOT_DASD" | sed -es!'\\\'!!g`
+  TOT_DASD=`echo "$TOT_DASD" | sed -es!"(GB)"!!g`
+ fi
+ tot_dasd_mb=`echo "$TOT_DASD" | awk -F":" '{print $1}'`
+ tot_dasd_gb=`echo "$TOT_DASD" | awk -F":" '{print $2}'`
+ tot_dasd_gb=`echo "$tot_dasd_gb"`
+ tot_dasd_gb=`echo $tot_dasd_gb | sed -es!GB!!g`
+
+ (( tot_dasd_tb = $tot_dasd_gb / 1000 ))
+ if (( $tot_dasd_tb )); then
+  tot_dasd_tp=`echo "scale=2; $tot_dasd_gb / 1000"|bc`
+  printf "%-2s %6s %7s %20s %10s %6s \n" "#" $tot_disk ::: "$tot_dasd_mb" "~${tot_dasd_gb}GB" "~${tot_dasd_tb}TB" >> $CPWD/INFO.out
+ else
+  printf "%-2s %6s %7s %22s %8s \n" "#" $tot_disk ::: "$tot_dasd_mb" "~${tot_dasd_gb}GB" >> $CPWD/INFO.out
+ fi
+
+# if [[ $OSTYPE = SunOS ]]; then
+#  print "$TOT_USED" >> $CPWD/INFO.out
+# fi
+
+ sep_line >> $CPWD/INFO.out
+ cat $CPWD/INFO.out >> $BASE/scrape.out
+ print "" >> $BASE/scrape.out
+
+ print "INFO.END" > $CPWD/INFO.END
+
+ rm -f DISKS.out DISKS2.out DISKS3.out DISKS4.out &
+
+}
+
+################ 
+# MAIN ROUTTINE
+################ 
+## FIND ACTIVE CPU's THEN SET THROTTLE
+ostype=`uname -s`
+case $ostype in
+ AIX) i=0
+  for p in `lsdev -Cc processor -S a | awk '{print $1}'`; do
+   if [[ -n `lsattr -El $p -a state|grep enable` ]]; then
+    (( i = $i + 1 ))
+   fi
+  done;;
+ SunOS) i=0
+  i=`/usr/sbin/psrinfo | awk '/on-line/ {np=np+1} END {print np}'`;;
+ HP-UX) THROTTLE=3;;
+ *) THROTTLE=2;;
+esac
+if (( $i >= 5 )); then
+ (( THROTTLE = $i - 1 ))
+else
+ THROTTLE=4
+fi
+INSTANCE_RUNNING=0
+DRDATE=`date '+%Y%m%d'`
+BASE=""
+USAGE="\nSyntax: scrape  [-d]</directory>
+ \t\t[-t]: Test for latest VERSION!
+ \t\t[-h]: HELP!\n"
+
+### Get command line parameters (if any)
+set -- `getopt d:ht $* 2>/dev/null`
+if [ $? != 0 ]; then
+ clear
+ ibm_delivery
+ print "$USAGE"
+ exit 1
+fi
+
+while [ $1 != -- ]
+do
+ case $1 in
+  -d) DRDATE=$2
+   if [[ ! -d $DRDATE ]]; then
+          clear
+          print "Invalid Directory!"
+          print "\aChoose a valid directory! i.e. /tmp/20021101\n"
+   else
+    BASE=$DRDATE
+   fi
+   shift;;
+  -h) clear
+      ibm_delivery
+      print "\n[-d] : Look for input files in user defined directory."
+      print "[-t] : Look for latest 'scrape' version at bcrsgai.wma.ibm.com." 
+      print "[-h] : Command line help.\n"
+      exit 1;;
+  -t) clear
+      ibm_delivery
+      check_for_latest_version
+      exit 1;;
+   *) clear
+      ibm_delivery
+      print "\n$OPTARG is not a valid option"
+      print "$USAGE\n";;
+ esac
+ shift
+done
+
+if [[ ! -d $BASE ]]; then
+ if [[ -z $BASE ]]; then
+  clear
+  print "\aChoose a valid directory!\n"
+ fi
+ directory=`ls -l | egrep "^d" | awk '{print $9}'`
+ select_num=0 
+
+ for i in $directory; do
+  (( select_num = $select_num + 1 ))
+  names[$select_num]="$i"
+  print "$select_num. $i"
+ done
+
+ print "\nPlease make one selection!  Or [Q-Quit]\n"
+ print "> \c"
+ while read select_directory; do
+  case $select_directory in
+   +([1-9]))
+    if (( $select_directory <= $select_num )); then
+     print "\nDirectory: ${names[$select_directory]}"
+     print "Is this correct?  [Y/N] or [Q-Quit] \c"
+     while read answer; do
+      case $answer in
+        Y|y) BASE=${names[$select_directory]}
+        clear
+        break ;;
+        N|n) BASE=""; break ;;
+        Q|q) exit 1 ;;
+        *) ;;
+      esac
+      print "Enter [Y/N or [Q] \c"
+     done
+
+    else
+     print "\nPlease make a valid selection!\n"
+     select_num=0
+
+     for i in $directory; do
+      (( select_num = $select_num + 1 ))
+      names[$select_num]="$i"
+     done
+     sleep 1
+    fi ;;
+   Q|q) exit 1 ;;
+   *) print "\nEnter a valid \"NUMBER\" please!\n"
+      sleep 1;;
+  esac
+ if [[ -d $BASE ]]; then
+  break
+ else
+ clear
+    print "Must be from 1 to $select_num or [Q-Quit]\n"
+    print "Please make a valid selection!\n"
+    select_num=0
+    for i in $directory
+    do
+     (( select_num = $select_num + 1 ))
+     names[$select_num]="$i"
+     echo "$select_num. $i"
+    done
+    print "\n> \c"
+ fi
+
+ done
+fi
+
+rm -f $DRDATE.scrape
+cd $BASE
+rm -f $BASE/SYSTEM_LISTING $BASE/scrape.out $DRDATE.scrape
+
+trap 'rm -f $BASE/SYSTEM_LIST* $BASE/scrape.out $BASE/$DRDATE.scrape $DRDATE.scrape; exit' 1 2 15
+
+print "BEGIN scrape: $DRDATE"
+
+ls -l | awk '{print $9}' | awk -F"/" '{print $1}' | egrep -v "scrape|scrap|.z|.html|.tmp|.out|.tar|.splstdata|SYSTEM_LIST|TSMPLAN|tsmplan" > SYSTEM_LIST$$
+
+for i in `ls -l | awk '{print $9}' | awk -F"/" '{print $1}' | egrep -v "scrape|scrap|.z|.html|.tmp|.out|.tar|.splstdata|SYSTEM_LIST|TSMPLAN|tsmplan"`
+do
+ BASE="`pwd`"
+ cd $i
+ CPWD="`pwd`"
+
+ rm -f INFO.END INFO.out DISKS.out DISKS2.out DISKS3.out DISKS4.out
+
+  (( INSTANCE_RUNNING = $INSTANCE_RUNNING + 1 ))
+  print "$i " >> $BASE/SYSTEM_LISTING
+  find_info $i $CPWD &
+
+  ### Throttle back mulitiple 'find_info's from running!  BEST (#CPU's + 2)
+  if (( $INSTANCE_RUNNING < $THROTTLE )); then
+
+  while : ; do
+   if [[ -n `cat $BASE/SYSTEM_LISTING` ]]; then
+    for i in `cat $BASE/SYSTEM_LISTING`; do
+     if [[ -f $BASE/$i/INFO.END ]]; then
+      cat  $BASE/$i/INFO.out | tee -a $BASE/scrape.out
+      print "" | tee -a $BASE/scrape.out 
+      (( INSTANCE_RUNNING = $INSTANCE_RUNNING - 1 ))
+      rm -f $BASE/$i/INFO.END  $BASE/$i/INFO.out
+      sed -es!"$i "!""!g $BASE/SYSTEM_LISTING > $BASE/SYSTEM_LISTING2
+      mv $BASE/SYSTEM_LISTING2 $BASE/SYSTEM_LISTING
+      break 2
+     fi
+    done
+    sleep 1
+   else
+    break
+   fi
+  done 
+
+ fi
+ cd ..
+done 
+
+sort -d SYSTEM_LISTING > SYSTEM_LIST2
+mv SYSTEM_LIST2 SYSTEM_LISTING
+
+### PRINT OUT REMAINING PAGES
+for i in `cat $BASE/SYSTEM_LISTING`; do
+ cd $i
+ while : ; do
+  if [[ -f INFO.END ]]; then
+   cat  INFO.out
+   print "" 
+   rm -f INFO.END INFO.out
+   cd ..
+   break
+  else
+   sleep 1
+  fi
+ done
+done
+
+## SORT ALPHA ON SYSTEM NAME! 
+if [[ -f $DRDATE.scrape ]]; then
+ rm -f $DRDATE.scrape
+fi
+
+for i in `cat $BASE/SYSTEM_LIST$$`; do
+ nawk 'BEGIN {RS=""} /Hostname/ && /'$i'/ {print $0"\n"}' $BASE/scrape.out >> $DRDATE.scrape
+done
+
+mv $BASE/$DRDATE.scrape ..
+
+print "\nEND scrape: $DRDATE"
+
+rm -f $BASE/SYSTEM_LIST* $BASE/scrape.out

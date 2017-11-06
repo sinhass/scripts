@@ -1,0 +1,16 @@
+for X in cs{1..230}.barefoot-int.lan
+do 
+ssh -q -o ConnectTimeout=5 -o  "StrictHostKeyChecking no" $X 'pkill salt-minion ; salt-minion -d'
+done
+
+for X in pd{1..230}.barefoot-int.lan
+do 
+ssh -q -o ConnectTimeout=5 -o  "StrictHostKeyChecking no" $X 'pkill salt-minion ; salt-minion -d'
+done
+
+for X in sge{1..230}.barefoot-int.lan
+do 
+ssh -q -o ConnectTimeout=5 -o  "StrictHostKeyChecking no" $X 'pkill salt-minion ; salt-minion -d'
+done
+
+for X in ct{1..230}; do ssh -o ConnectTimeout=5 -o  "StrictHostKeyChecking no" $X 'pkill salt-minion ; salt-minion -d';echo $X; done

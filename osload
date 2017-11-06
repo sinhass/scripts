@@ -1,0 +1,67 @@
+#!/usr/bin/ksh
+# Author : Siddhartha S Sinha
+# Ver 2.0
+# Date : 01/01/2009
+# Ver 2.1
+# Date : 11/07/2010
+# Ver 2.1.1
+# Date : 11/07/2010
+# Slight modification
+################################################################################
+# This script is written to help BCRS Support Team to use NIM more efficiently. It is faster than
+# using smitty. And most useful for Customer Nim Server
+################################################################################
+TERM=vt220
+export TERM
+################################################################################
+# GET_YES_NO FUNCTION
+################################################################################
+#
+GET_YES_NO()    
+{
+   _ANSWER=
+           if  [ $# -eq 0 ]; then
+                 echo "Usage: GET_YES_NO message" 1>&2
+                     exit 1
+                         fi
+
+while :
+        do
+             if [ "`echo -n`" = "-n" ]; then
+                echo "$@\c"
+                     else
+                        echo -n "$@"
+                            fi
+                              read _ANSWER
+                             case "$_ANSWER" in
+                          [yY] | yes | YES | Yes)         return 0 ;;
+                     [nN] | no  | NO  | No )         return 1 ;;
+                * ) echo "Please Enter y or n."          ;;
+             esac
+        done
+    }
+
+#
+#
+INST_OS()
+{
+smitty nim_bosinst
+}
+lsnim >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+echo "You can run this script only on a NIM master Server"
+break
+else
+INST_OS	
+ while :
+        do
+         tput clear
+             if GET_YES_NO "Do you want to load more Servers ?[y/n]:\c"
+                 then
+	            INST_OS 
+                   else
+                  echo "Thank you for using this script. This is IBM BCRS Property."
+                break
+             fi 
+       done
+fi

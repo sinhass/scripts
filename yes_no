@@ -1,0 +1,15 @@
+function ask_yes_or_no() {
+    read -p "$1 ([Y]es or No): "
+    case $(echo $REPLY | tr '[A-Z]' '[a-z]') in
+        y|yes) echo "yes" ;;
+        *)     echo "no" ;;
+    esac
+}
+
+if [[ "no" == $(ask_yes_or_no "Are you sure?") || \
+      "no" == $(ask_yes_or_no "Are you really sure?") ]]
+then
+    echo "Skipped."
+    exit 0
+fi
+ls -ls

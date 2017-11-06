@@ -1,0 +1,15 @@
+#!/bin/ksh
+# This shell script (makesms) creates the
+#  System Management Services Diskette, Version 1.07
+#  for the RS/6000 43P Model 120/133 (type 7248) system.
+#
+echo "dd if=./sms107.dd of=/dev/rfd0 obs=90b conv=sync"
+dd if=./sms107.dd of=/dev/rfd0 obs=90b conv=sync
+if [ $? -eq 0 ]
+ then
+    echo "Remove the diskette.  Please label it "
+    echo " \"IBM RS/6000 43P Model 120/133"
+    echo "  System Management Services Version 1.07\""
+  else
+    echo "Diskette not successfully created".
+fi

@@ -1,0 +1,6 @@
+#!/bin/bash
+# Run and kill commands together.
+
+setsid sh -c 'fs1_backup.sh & fs2_backup.sh' &
+pgid=$!
+echo "Background tasks are running in process group $pgid, kill with kill -TERM -$pgid"

@@ -1,0 +1,7 @@
+#!/usr/bin/ksh
+# Author - Siddhartha S Sinha
+#
+echo "Type the name of the user you want to unlock:\c"
+read _USER_NAME
+chsec -f /etc/security/lastlog -a "unsuccessful_login_count=0" -s $_USER_NAME
+echo "$_USER_NAME successfully unlocked"

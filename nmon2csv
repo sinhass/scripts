@@ -1,0 +1,30 @@
+#!/usr/bin/bash
+# 
+# nmon2csv - a tool to prepare nmon file for language-specific delimiter
+# 	     and convert it to csv
+#
+# by Piotr Kapczuk 
+# e-mail Piotr.Kapczuk@hoop.pl or piotr@piotr.prv.pl
+#
+
+
+
+# Directory for csv files. Must end with slash '/'
+DESTDIR="./"
+
+
+
+if [ $# -gt 0 ] && [ -f ${1} ]
+then
+
+ for i in $@ 
+ do
+   echo "Saving ${DESTDIR}${i}.csv"
+   sort -A $i| sed 's/,/;/g'| sed '/^[BBB,AAA]/!s/\./,/g' > ${DESTDIR}${i}.csv
+ done
+
+else 
+ echo "This tool converts NMON output file to csv."
+ echo ""
+ echo "Usage: $(basename ${0}) nmon_file [nmon_file] [...] "
+fi

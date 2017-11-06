@@ -1,0 +1,188 @@
+#!/bin/ksh
+##########################################################################
+## rmbcv utility                                                        ##
+## Copyright (C) by EMC Corporation 1999,2000,2001 all rights reserved. ##
+## This utility supports Timefinder devices and Timefinder devices      ##
+## under PowerPath 2.x,3.x                                              ##
+## krichards V2.0.0.2	06/12/02                                        ##
+##########################################################################
+#
+################
+# Sort devices #
+################
+LANG=C
+bcvsort()
+{
+        echo $*| sed -e 's/\ /\
+/g' | sort -u
+}
+#######################
+# Unconfigure devices #
+#######################
+ucfgdev()
+{
+	/etc/methods/ucfgdevice -l $hdisk > /dev/null 2>&1
+	if [ $? -eq 0 ]
+                then    
+                        return 0
+                else
+                        return 1
+        fi
+}
+######################################
+# Test if PowerPath 2.x is installed #
+######################################
+powerpathinstalled()
+{
+lslpp -l EMCpower.base > /dev/null 2>&1
+        if [ $? -eq 0 ]
+                then
+                        return 0
+                else
+                        return 1
+        fi
+}
+#####################################
+# List Available Timefinder devices #
+#####################################
+LIST=`lsdev -Ct*BCV -SA -F "name"`
+if  ( powerpathinstalled -eq 0 )
+then
+############################################
+# List and sort Timefinder hdisks and it's #
+# associated PowerPath device              #
+############################################
+for disk in $LIST
+    do
+    pwr_devdisk=`odmget -q "value = $disk AND attribute = pnpath" CuAt | grep 'name' | cut -f2 -d '"'`
+    PWRLIST="$PWRLIST $pwr_devdisk"
+done
+if [ -n "$PWRLIST" ]
+then
+    PWRLIST=$(bcvsort $PWRLIST)
+    if [ $? -ne 0 ]
+    then
+           STATUS=1
+    fi
+fi
+###############################################
+# List Available Timefinder PowerPath devices #
+###############################################
+if (( "$#" < 1 ))
+then
+
+    echo "\n"
+    for PWR in $PWRLIST
+	do
+	echo "TimeFinder: $PWR Available"			
+    done
+    echo "\nusage:\trmbcv <hdiskpower#> | <-a> \n"
+    exit 1
+fi
+#####################
+# PowerPath support #
+#####################
+if test "$1" = "-a"
+then
+    for PWR in $PWRLIST
+        do
+        devlist=`odmget -q "name = $PWR AND attribute = pnpath" CuAt | grep 'value' | cut -f2 -d '"'` 
+       	POWERFINALTEST=$(lsdev -Cc disk -l $PWR | awk '{print $2}')
+            if [[ $POWERFINALTEST = Available ]] ; then
+	    /usr/sbin/powermt remove dev=$PWR 
+	    fi
+
+        for hdisk in $devlist ; do 
+	HDISKFINALTEST=$(lsdev -Cc disk -l $hdisk | awk '{print $2}')
+	   if [[ $HDISKFINALTEST = Available ]] ; then
+	      if ( ucfgdev -eq 0 ) ; then
+	      echo "$hdisk Defined"
+	      else
+	      echo "$hdisk is in a undetermined state"
+	      fi
+	   fi
+	done
+	echo ""
+    done
+else
+    BCVSELECT=$1
+    for PWR in $PWRLIST
+       do
+       if test "$BCVSELECT" = "$PWR" ; then
+       devlist=`odmget -q "name = $PWR AND attribute = pnpath" CuAt | grep 'value' | cut -f2 -d '"'`
+       	POWERFINALTEST=$(lsdev -Cc disk -l $PWR | awk '{print $2}')
+            if [[ $POWERFINALTEST = Available ]] ; then
+	     /usr/sbin/powermt remove dev=$PWR 
+	    fi
+	
+       for hdisk in $devlist ; do 
+       HDISKFINALTEST=$(lsdev -Cc disk -l $hdisk | awk '{print $2}')
+	   if [[ $HDISKFINALTEST = Available ]] ; then
+              if ( ucfgdev -eq 0 ) ; then
+              echo "$hdisk Defined"
+              else
+              echo "$PWR is in a undetermined state\n"
+              exit 1
+              fi
+           fi
+       done
+       echo ""
+       exit 0
+       fi
+    done
+    echo "Error: $BCVSELECT not valid\n"
+    exit 2
+fi
+###########################
+# Standard device support #
+###########################
+else
+if (( "$#" < 1 ))
+then
+
+    echo "\n"
+    for hdisk in $LIST
+        do
+        echo "TimeFinder: $hdisk Available"
+    done
+    echo "\nusage:\trmbcv <hdisk#> | <-a> ALL\n"
+exit 1
+fi
+#
+if test "$1" = "-a"
+then
+
+    for hdisk in $LIST
+        do
+        HDISKFINALTEST=$(lsdev -Cc disk -l $hdisk | awk '{print $2}')
+        if [[ $HDISKFINALTEST = Available ]] ; then
+                if ( ucfgdev -eq 0 ) ; then
+                echo "$hdisk Defined\n"
+                else
+                echo "$hdisk is in a undetermined state\n"
+                fi
+        fi
+     done
+else
+BCVSELECT=$1
+    for hdisk in $LIST
+        do
+        if test "$BCVSELECT" = "$hdisk"
+        then
+	HDISKFINALTEST=$(lsdev -Cc disk -l $hdisk | awk '{print $2}')
+	    if [[ $HDISKFINALTEST = Available ]] ; then
+                if ( ucfgdev -eq 0 ) ; then
+                echo "$hdisk Defined\n"
+	        exit 0	
+		else
+                echo "$hdisk is in a undetermined state\n"
+		exit 1
+		fi
+            fi
+	fi
+    done
+    echo "Error: $BCVSELECT not valid\n"
+    exit 2
+fi
+fi
+

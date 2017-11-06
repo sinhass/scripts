@@ -1,0 +1,87 @@
+#!/usr/bin/ksh
+# Author   : Siddhartha Sinha
+# Rev      : 1.0
+# Date     : 07/15/2009
+# Audience : BCRS, Boulder
+# Rev      : 3.0
+# Date     : 07/22/2009
+# Reason   : Revised, so that it will put back the original configuration
+#            in case ctrl+c pressed or script cancelled before completion 
+# Rev      : 3.01
+# Date     : 07/23/2009
+# Reason   : Fixed some major bug
+#
+#
+# ############################################################### #
+# This Script will find the configured IP/Subnet and test all the #
+# Network Interfaces in the Machine                               #
+# Must be running from the Console                                #
+# ############################################################### #
+#
+if [ -r /tmp/network_result ]; then
+cat /dev/null >/tmp/network_result
+else
+touch /tmp/network_result
+fi
+tput clear
+HOST_NAME=`hostname`
+#TTY_NAME=`tty|cut -c 7-8`
+TTY_NAME=$(tty)
+CONSOLE=$(lscons -b)
+if [ $HOST_NAME = hercules ]; then
+echo "You are not allowed to run this script  on $HOST_NAME"
+elif [ $HOST_NAME = nimrod.boulder.ibm.com ]; then
+echo "You are not allowed to run this script  on $HOST_NAME"
+elif [ $TTY_NAME != $CONSOLE ] ; then
+echo "You can run this script only from console."
+else
+{
+ORIGINAL_INTERFACE=`ifconfig -a|grep -i en| awk -F":" '{print $1}'|grep -v tcp`
+IP=`ifconfig -a|grep -i inet |sed -e '/127\.0\.0\.1/d' -e '/inet6/d' |awk '{print $2}'`
+HEX_SUBNET=`ifconfig -a|grep -i inet | sed -e '/127\.0\.0\.1/d' -e '/inet6/d'| awk '{print $4}'`
+OCT1=`echo $HEX_SUBNET | cut -c 1-4`
+OCT2=0x`echo $HEX_SUBNET | cut -c 5-6`
+OCT3=0x`echo $HEX_SUBNET | cut -c 7-8`
+OCT4=0x`echo $HEX_SUBNET | cut -c 9-10`
+_SUBNET_MASK=`printf "%d.%d.%d.%d\n" $OCT1 $OCT2 $OCT3 $OCT4`
+echo "Please make sure that the speed of the interface matches with"
+echo "the network port setting. Otherwise run linkstatus to verify."
+echo "Type the IP address you want to ping. It must be on same vlan"
+echo "Now Type the IP here:\c"
+read _PING_IP
+echo "It will take upto 180 seconds for each interface before you see any result"
+echo "                             PLS WAIT                                "
+for i in `lsdev -Cc adapter -F name|grep -i ent |sed 's/ent/en/g'`
+do
+ADAPTER=$i
+trap "ifconfig $ADAPTER down detach && ifconfig $ORIGINAL_INTERFACE $IP netmask $_SUBNET_MASK ;trap 1 2 3 9 15 24 ;exit 0" 1 2 3 9 15 24
+ifconfig $ORIGINAL_INTERFACE down detach
+ifconfig $ADAPTER up
+sleep 10
+ifconfig $ADAPTER $IP netmask $_SUBNET_MASK up
+echo "Now ping'ing $_PING_IP using $ADAPTER. Pls wait\c"
+{
+ TIME_LAPSED=0
+  while [[ $TIME_LAPSED -lt 181 ]]
+    do
+       echo ".\c"
+         sleep 1
+         TIME_LAPSED=$((TIME_LAPSED+1))
+   done
+          }
+ping -c 16 $_PING_IP >/dev/null 2>&1
+ {
+   if [ $? -ne 0 ]; then
+    echo "\n $ADAPTER failed Network test" | tee -a /tmp/network_result
+    else
+    echo "\n $ADAPTER could successfully ping $_PING_IP" | tee -a /tmp/network_result
+    fi
+      }
+ifconfig $ADAPTER down detach
+sleep 10
+done
+ifconfig $ORIGINAL_INTERFACE $IP $_SUBNET_MASK
+echo "Network test completed. Result can be seen on /tmp/network_result"
+echo "file. Goodbye                                                    "
+}
+fi

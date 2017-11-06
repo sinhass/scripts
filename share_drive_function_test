@@ -1,0 +1,39 @@
+
+function YESORNO() {
+    read -p "$1 ([Y]es or No): "
+    case $(echo $REPLY | tr '[A-Z]' '[a-z]') in
+        y|yes) return 0 ;;
+        *)     return 1 ;;
+    esac
+}
+
+
+SHARED_DRIVE_ACCESS () {
+  clear
+  echo "Shared Drive Access is restricted to Full time employees only. Check with Glen for employees based on other countries."
+  if [[  "no" == $(YESORNO "Are you sure you want to add shared drive access?") ]]; then
+      echo "Goodbye"
+  else
+
+      echo -n "Type the gmail id of the employee:"
+      read GMAIL_ID_SHARED drive
+      echo "Ok, I will verify before proceeding. Pls wait..."
+        diff   "$GMAIL_ID_SHARED" /etc/hosts >/dev/null 2>&1
+          if [[  $? -ne 0 ]]; then
+              echo "Please type proper gmail id and try again."
+            break
+        fi
+
+      diff $GMAIL_ID_SHARED  $GMAIL_ID_SHARED  >/dev/null 2>&1
+        if [[ $? -eq 0 ]]; then
+            echo "Contractors are not allowed to access shared drive. Goodbye."
+            exit 1
+        fi
+
+      /root/bin/gam/gam update group "Barefoot Shared Folder Access" add member "$GMAIL_ID_SHARED"
+
+    
+    fi
+}
+
+SHARED_DRIVE_ACCESS

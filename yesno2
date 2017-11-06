@@ -1,0 +1,12 @@
+
+while :
+  do
+    echo -n "Create Barefoot Email for this user?[y/n]:]"
+    read YESORNO
+    YESORNO=$(echo $YESORNO | tr '[:upper:]' '[:lower:]')
+    case $YESORNO in
+     y|yes) echo "$YESORNO" ;;
+     n|no)  echo "$YESORNO";;
+     *)     echo "Select yes or no" ;;
+ esac
+done

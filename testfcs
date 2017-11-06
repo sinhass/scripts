@@ -1,0 +1,28 @@
+#!/usr/bin/ksh
+# Author : Siddhartha S Sinha
+# Version: 2.0
+# This script will help to reduce zoning troubleshooting time
+# for BCRS setup
+#
+DELETE_FCS ()
+{
+lsdev -Cc adapter -F name|grep -i fcs|while read FCS
+do
+rmdev -Rdl $FCS
+done
+ }
+tput clear
+echo "Pls wait........ cfgmgr running.........."
+DELETE_FCS >/dev/null 2>&1
+cfgmgr >/dev/null 2>&1
+FIND_RUN_CFGMGR ()
+{
+ lsdev -Cc adapter -F name|grep -i fcs|while read FCS
+    do
+      cfgmgr -vl $FCS
+    done
+         }
+while true
+    do
+       FIND_RUN_CFGMGR
+   done

@@ -1,0 +1,18 @@
+function YESNO() {
+    while :
+      do
+        read -p "$1 ([y]es or [n]o): "
+        case $(echo $REPLY | tr '[A-Z]' '[a-z]') in
+            y|yes) echo "yes" ;;
+            n|no) echo "no" ;;
+            *)     echo "Select yes or no" ;;
+        esac
+      done
+}
+
+if [[ "no" == $(YESNO "Are you sure?") || \
+      "no" == $(YESNO "Are you *really* sure?") ]]
+then
+    echo "Skipped."
+    exit 0
+fi

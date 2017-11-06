@@ -1,0 +1,18 @@
+#!/usr/bin/ksh
+# Author : Siddhartha S Sinha
+# Date   : 09/14/2009
+# This script will create LPP_SOURCE from existing directory
+cd /export/lpp_source
+for LPP_SOURCE in `ls -l | grep lpp$|awk '{print $9}'`
+do
+nim -o define -t lpp_source -a server=master -a location=/export/lpp_source/$LPP_SOURCE $LPP_SOURCE
+ {
+   if [ $? -eq 0 ]; then
+     nim -o define  -t spot -a server=master -a source=$LPP_SOURCE -a location=/export/spot/`echo $LPP_SOURCE \
+       | sed -e 's/lpp/spot/g'` `echo $LPP_SOURCE|sed -e 's/lpp/spot/g'`
+   fi
+      }
+done
+tput clear
+echo "Created all the lpp_sources"
+done

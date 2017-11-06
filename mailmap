@@ -1,0 +1,249 @@
+#!/usr/bin/ksh
+# Author : Siddhartha S Sinha
+# This Script will create a MAP file and will send to the user
+# specified lotus notes email id
+# Rev 2.0
+# Revised by : Siddhartha Sinha
+# 08/22/2009
+# Changes : Added feature so that only Lotus Notes ID will be accepted as email id.
+#
+export TERM=vt320
+tput clear
+trap "tput clear;trap 2;exit 0" 2
+MAIL_MAP()
+{
+##############################################################################################
+# VARIABLES & FUNCTIONS
+##############################################################################################
+HOSTNAME=`hostname`
+OSVER=`oslevel -r|cut -c 1-2`
+trap "rm -f ./$HOSTNAME.txt;trap 2;exit 0" 2
+tput clear
+echo "Please wait.."
+#
+# PRINT CD / DVD INFORMATION
+##############################################################################################
+PRINTCD ()
+{
+for i in `lsdev -Cc cdrom -F name`
+do
+CDROM=$i
+SLOT=`lscfg -vpl $CDROM |awk '/cd/ {print $2}'`
+DEVTYPE=`lscfg -vpl $CDROM|awk '/cd/ {print $3" " $4" " $5}'`
+printf "%-40s %-40s %-10s\n" "$SLOT" "$DEVTYPE" "$CDROM"
+done
+	}
+#
+#############################################################################################
+# PRINT ETHERNET INFORMATION FOR AIX 5.2 & HIGHER
+#############################################################################################
+PRINTENT ()
+{
+printf "%-30s %-31s %-20s %-5s\n" "SLOT" "DEVTYPE" "FIRMWARE" "DEVICE"
+printf "%-30s %-31s %-20s %-5s\n" "-----------------------------" "----------------------------" "--------" "------"
+for i in `lsdev -Cc adapter -l ent\* -F name`
+do
+ENT=$i
+SLOT=`lscfg -vpl $ENT|grep -i ent|sed -e 's/10\/100\/1000 Base-TX PCI-X /Gigabit /g' -e 's/\(141.....\)//g' -e 's/()//g'|awk '{print $2}'`
+DEVTYPE=`lscfg -vpl $ENT|grep -i ent|sed -e 's/10\/100\/1000 Base-TX PCI-X /Gigabit /g' -e 's/\(141.....\)//g' -e 's/()//g'|awk '{print $3" "$4" "$5}'`
+ENT_FIRM=`lsmcode -c -d $ENT | if [ $? -ne 0 ]; then echo "N/A"
+else
+awk '{print $NF}'| awk -F"." '{print $1}'
+fi`
+#printf "%-40s %-41s %-5s\n" "$SLOT" "$DEVTYPE" "$ENT"
+printf "%-30s %-31s %-20s %-5s\n" "$SLOT" "$DEVTYPE" "$ENT_FIRM" "$ENT"
+done
+}
+#
+###########################################################################################
+# PRINT TAPE DRIVE INFORMATION
+###########################################################################################
+TAPEINFO ()
+{
+for i in `lsdev -Cc tape -F name`
+do
+TAPE=$i
+SLOT=`lscfg -vpl $TAPE | awk '/rmt|smc/ {print $2}'|sed -e 's/\-L.*//g'`
+DEVTYPE=`lscfg -vpl $TAPE | awk '/rmt|smc/ {print $3" "$4" "$5" "$6" "$7$8$9}'`
+printf "%-45s %-36s %-5s\n" "$SLOT" "$DEVTYPE" "$TAPE"
+done
+        }
+#
+##########################################################################################
+# PRINT FIBER CARD INFORMATION FOR  AIX 5.2 & HIGHER
+##########################################################################################
+PRINTFCS ()
+{
+printf "%-30s %-31s %-20s %-5s\n" "SLOT" "MODEL" "FIRMWARE" "DEVICE"
+printf "%-30s %-31s %-20s %-5s\n" "----------------------------" "--------" "-------" "-----"
+for i in `lsdev -Cc adapter -l fcs\* -F name`
+do
+FCS=$i
+MODEL=`lscfg -vpl $FCS|egrep Model|awk '{print $2}'`
+SLOT=`lscfg -vpl $FCS|egrep -i Phys|awk '{print $3}'`
+FIRMWARE_LEVEL=`lsmcode -c -d $FCS|awk '{print $NF}'|awk -F"." '{print $1}'`
+printf "%-30s %-31s %-20s %-5s\n" "$SLOT" "$MODEL" "$FIRMWARE_LEVEL" "$FCS"
+#printf "%-40s %-41s %-5s\n" "$SLOT" "$MODEL" "$FCS"
+done
+	}
+#
+##########################################################################################
+# PRINT SCSI CARD INFORMATION FOR AIX 5.2 & HIGHER
+##########################################################################################
+PRINTSCSI ()
+{
+for i in `lsdev -Cc adapter -l \*scsi\* -F name`
+do
+SCSI=$i
+SLOT=`lscfg -vpl $SCSI|egrep -i Phys|awk '{print $3}'|sed 's/ /\t/g'`
+MODEL=`lscfg -vpl $SCSI|grep -v scsi-2|grep scsi|awk '{print $3" "$4" "$6}'|sed -e '/^ *$/d'`
+printf "%-39s %-39s %-10s\n" "$SLOT" "$MODEL" "$SCSI"
+done
+		}
+#
+########################################################################################
+# PRINT ALL HARD DISK INFORMATION
+########################################################################################
+PRINTSCSIDISK ()
+{
+for i in `lsdev -Cc disk -F name|grep -v vpath`
+do
+DISK=$i
+SLOT=`lscfg -vpl $DISK|awk '/hdisk/ {print $2}'|sed -e 's/\-L.*//g'`
+SIZE=`bootinfo -s $DISK`
+printf "%-45s %-35s %-10s\n" "$SLOT" "$SIZE "MB "$DISK"
+done
+}
+#
+########################################################################################
+# PRINT SCSI CARD INFORMATION FOR AIX 5.1 & OLDER
+########################################################################################
+MAP_SCSI_CARD_AIX_51 ()
+{
+for i in `lsdev -Cc adapter|grep -i scsi|awk '{print $1}'`
+do
+SCSI_ADAPTER=$i
+SCSI_LOGICAL_LOC=`lscfg -vpl $SCSI_ADAPTER | awk '/scsi/ {print $2}'|sed -e '/scsi/d' -e '/Type/d'`
+SCSI_PHYSICAL_LOC=`lscfg -vpl $SCSI_ADAPTER|grep -i phys| awk '{print $3}'`
+SCSI_DEV_TYPE=`lscfg -vpl $SCSI_ADAPTER|grep scsi|sed -e '/Name/d' -e '/Node/d' -e '/Device/d' -e 's/I\/O//g'|awk '{print $3" "$4" "$5" "$6}'`
+printf "%-26s %-17s %-38s %-10s\n" "$SCSI_PHYSICAL_LOC" "$SCSI_LOGICAL_LOC" "$SCSI_DEV_TYPE" "$SCSI_ADAPTER"
+done
+			}
+#
+#######################################################################################
+# PRINT FIBER CARD INFORMATION FOR AIX 5.1 & OLDER
+#######################################################################################
+MAP_FIBER_CARD_AIX51 ()
+{
+for i in `lsdev -Cc adapter|grep -i fcs|awk '{print $1}'`
+do
+FIBER_ADAPTER=$i
+FIBER_PHYS_LOC=`lscfg -vpl $FIBER_ADAPTER|grep -i Phy|awk '{print $3}'`
+FIBER_CARD_MODEL=`lscfg -vpl $FIBER_ADAPTER|grep -i Model|awk '{print $2}'`
+FIBER_MAC_ADDRESS=`lscfg -vpl $FIBER_ADAPTER|grep -i network|awk '{print $2}'| sed -e 's/Address.............//'`
+printf "%-30s %-30s %-20s %-6s\n" "$FIBER_PHYS_LOC" "$FIBER_CARD_MODEL" "$FIBER_MAC_ADDRESS" "$FIBER_ADAPTER"
+done
+		}
+#
+##########################################################################################
+# MAP ETHERNET CARD INFORMATION FOR AIX 5.1 & OLDER
+##########################################################################################
+ETHERNET_AIX51 ()
+{
+for i in `lsdev -Cc adapter|grep -i en|awk '{print $1}'`
+do
+ETHERNET_ADAPTER=$i
+ETHERNET_PHYS=`lscfg -vpl $ETHERNET_ADAPTER|grep -i phys|awk '{print $3}'`
+ETHERNET_TYPE=`lscfg -vpl $ETHERNET_ADAPTER|grep -i ent|awk '{print $3" "$4" "$5" "$6}'|sed -e 's/10\/100\/1000/Gigabit/g' -e 's/IBM //g' -e 's/Base\-TX//g'`
+printf "%-40s %-41s %-6s\n" "$ETHERNET_PHYS" "$ETHERNET_TYPE" "$ETHERNET_ADAPTER"
+done
+	}
+
+#####################################################################################################
+#    M A I N   P R O G R A M
+#####################################################################################################
+
+PRINT_HOSTNAME ()
+{
+HOST_NAME=`hostname`
+printf "%-30s %-20s\n" "$NONE" "$HOST_NAME"
+}
+PRINT_HOSTNAME>$HOSTNAME.txt
+echo "_____________________________________________________________________\n" >> $HOSTNAME.txt
+echo "" >> $HOSTNAME.txt
+echo "Printed on `date`" >> $HOSTNAME.txt
+echo "_____________________________________________________________________\n" >> $HOSTNAME.txt
+echo "OS VERSION" `oslevel -r` >>$HOSTNAME.txt
+echo "_____________________________________________________________________\n" >> $HOSTNAME.txt
+lsconf 1>/tmp/lsconf.MAP
+egrep "System Model" /tmp/lsconf.MAP 1>>$HOSTNAME.txt
+egrep "Number Of Processors" /tmp/lsconf.MAP 1>>$HOSTNAME.txt
+egrep "Good Memory Size" /tmp/lsconf.MAP 1>>$HOSTNAME.txt
+egrep "Firmware Version" /tmp/lsconf.MAP 1>>$HOSTNAME.txt
+echo "_____________________________________________________________________\n" >> $HOSTNAME.txt
+echo "LIST OF ALL DISKS AVAILABLE IN THIS SYSTEM" >> $HOSTNAME.txt
+echo "__________________________________________________________________________________________\n" >> $HOSTNAME.txt
+PRINTSCSIDISK >> $HOSTNAME.txt
+echo "__________________________________________________________________________________________\n" >> $HOSTNAME.txt
+PRINTCD >> $HOSTNAME.txt
+echo "__________________________________________________________________________________________\n" >> $HOSTNAME.txt
+TAPEINFO >> $HOSTNAME.txt
+echo "__________________________________________________________________________________________\n" >> $HOSTNAME.txt
+echo "LIST OF ALL SCSI CARD AVAILABLE IN THIS SYSTEM" >> $HOSTNAME.txt
+echo "__________________________________________________________________________________________\n" >> $HOSTNAME.txt
+if [ $OSVER = 51 ]; then
+MAP_SCSI_CARD_AIX_51 >> $HOSTNAME.txt
+else
+PRINTSCSI >> $HOSTNAME.txt
+fi
+echo "__________________________________________________________________________________________\n" >> $HOSTNAME.txt
+echo "LIST OF ALL ETHERNET CARDS AVAILABLE IN THIS SYSTEM" >> $HOSTNAME.txt
+echo "__________________________________________________________________________________________\n" >> $HOSTNAME.txt
+if [ $OSVER = 51 ]; then
+ETHERNET_AIX51 >> $HOSTNAME.txt
+else
+PRINTENT >> $HOSTNAME.txt
+fi
+echo "__________________________________________________________________________________________\n" >> $HOSTNAME.txt
+echo "LIST OF ALL FIBER CARDS INSTALLED IN THIS SYSTEM" >> $HOSTNAME.txt
+echo "__________________________________________________________________________________________\n" >> $HOSTNAME.txt
+if [ $OSVER = 51 ]; then
+MAP_FIBER_CARD_AIX51 >> $HOSTNAME.txt
+else
+PRINTFCS >> $HOSTNAME.txt
+fi
+echo "__________________________________________________________________________________________\n" >> $HOSTNAME.txt
+echo "LIST OF OTHER CARDS AND EMPTY SLOTS" >> $HOSTNAME.txt
+echo "__________________________________________________________________________________________\n" >> $HOSTNAME.txt
+lsslot -c pci | egrep -iv 'scsi|ent|fcs'  >> $HOSTNAME.txt
+
+echo "__________________________________________________________________________________________\n" >> $HOSTNAME.txt
+ftp -i -n 172.21.64.2 <<HEHE
+quote USER ftp
+quote PASS whoami@dontmess.com
+cd /pub/docs
+mput $HOSTNAME.txt
+quit
+HEHE
+rsh 172.21.64.2 -l docs mailx -s "$HOSTNAME"_MAP $EMAIL_ID < ./$HOSTNAME.txt
+sleep 5
+rm $HOSTNAME.txt
+echo "Now check your lotusnotes mail"
+}
+GetValidEmailId()	{
+while :
+do
+#echo "This script will create a hardware map and send to your lotusnotes ID"
+echo "Please type your lotusnotes email id here:\c"
+read EMAIL_ID
+	case "$EMAIL_ID" in
+		*@us.ibm.com )		return 0  ;;
+		* ) echo "\nPlease Enter Valid Lotus Notes ID or press CTRL+C to exit.\n"		 ;;
+	esac
+done
+}
+echo "This script will create a hardware map and send to your lotusnotes ID"
+if GetValidEmailId
+then
+MAIL_MAP
+fi

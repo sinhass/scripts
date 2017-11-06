@@ -1,0 +1,230 @@
+#!/usr/bin/sh
+# This file is for BCRS use in creating maps for RISC6000 systems.
+# Rev 1.0
+# Author: Nate Salazar, IBM BCRS, Boulder, CO
+# Email: natesala@us.ibm.com
+# Rev 1.10
+# Siddhartha Sinha
+# Rev 2.0
+# Siddhartha Sinha
+# ( Modified the Fiber Card section )
+# Rev 2.01
+# Modified Ethernet & SCSI Section
+# Rev 3.0a
+# Siddhartha Sinha
+# Date : 07/16/2009
+# Completely rewriten the script. Fixed AIX 5.1 problems.
+#
+##############################################################################################
+# VARIABLES & FUNCTIONS
+##############################################################################################
+OSVER=`oslevel -r|cut -c 1-2`
+trap "rm -f ./print.out;trap 2;exit 0" 2
+#
+# PRINT CD / DVD INFORMATION
+##############################################################################################
+PRINTCD ()
+{
+for i in `lsdev -Cc cdrom -F name`
+do
+CDROM=$i
+SLOT=`lscfg -vpl $CDROM |awk '/cd/ {print $2}'`
+DEVTYPE=`lscfg -vpl $CDROM|awk '/cd/ {print $3" " $4" " $5}'`
+printf "%-30s %-30s %-10s\n" "$SLOT" "$DEVTYPE" "$CDROM"
+done
+	}
+#
+#############################################################################################
+# PRINT ETHERNET INFORMATION FOR AIX 5.2 & HIGHER
+#############################################################################################
+PRINTENT ()
+{
+for i in `lsdev -Cc adapter -l ent\* -F name`
+do
+ENT=$i
+SLOT=`lscfg -vpl $ENT|grep -i ent|sed -e 's/10\/100\/1000 Base-TX PCI-X /Gigabit /g' -e 's/\(141.....\)//g' -e 's/()//g'|awk '{print $2}'`
+DEVTYPE=`lscfg -vpl $ENT|grep -i ent|sed -e 's/10\/100\/1000 Base-TX PCI-X /Gigabit /g' -e 's/\(141.....\)//g' -e 's/()//g'|awk '{print $3" "$4" "$5}'`
+printf "%-30s %-30s %-5s\n" "$SLOT" "$DEVTYPE" "$ENT"
+done
+}
+#
+###########################################################################################
+# PRINT TAPE DRIVE INFORMATION
+###########################################################################################
+TAPEINFO ()
+{
+for i in `lsdev -Cc tape -F name`
+do
+TAPE=$i
+SLOT=`lscfg -vpl $TAPE | awk '/rmt/ {print $2}'`
+DEVTYPE=`lscfg -vpl $TAPE | awk '/rmt/ {print $3" "$4" "$5" "$6" "$7$8$9}'`
+printf "%-30s %-30s %-6s\n" "$SLOT" "$DEVTYPE" "$TAPE"
+done
+        }
+#
+##########################################################################################
+# PRINT FIBER CARD INFORMATION FOR  AIX 5.2 & HIGHER
+##########################################################################################
+PRINTFCS ()
+{
+for i in `lsdev -Cc adapter -l fcs\* -F name`
+do
+FCS=$i
+MODEL=`lscfg -vpl $FCS|egrep Model|awk '{print $2}'`
+SLOT=`lscfg -vpl $FCS|egrep -i Phys|awk '{print $3}'`
+printf "%-30s %-30s %-5s\n" "$SLOT" "$MODEL" "$FCS"
+done
+	}
+#
+##########################################################################################
+# PRINT SCSI CARD INFORMATION FOR AIX 5.2 & HIGHER
+##########################################################################################
+PRINTSCSI ()
+{
+for i in `lsdev -Cc adapter -l \*scsi\* -F name`
+do
+SCSI=$i
+SLOT=`lscfg -vpl $SCSI|egrep -i Phys|awk '{print $3}'|sed 's/ /\t/g'`
+MODEL=`lscfg -vpl $SCSI|grep -v scsi-2|grep scsi|awk '{print $3" "$4" "$6}'|sed -e '/^ *$/d'`
+printf "%-30s %-30s %-10s\n" "$SLOT" "$MODEL" "$SCSI"
+done
+		}
+#
+########################################################################################
+# PRINT ALL HARD DISK INFORMATION
+########################################################################################
+PRINTSCSIDISK ()
+{
+for i in `lsdev -Cc disk -F name`
+do
+DISK=$i
+SLOT=`lscfg -vpl $DISK|awk '/hdisk/ {print $2}'`
+SIZE=`bootinfo -s $DISK`
+printf "%-45s %-15s %-10s\n" "$SLOT" "$SIZE"-MB "$DISK"
+done
+}
+#
+########################################################################################
+# PRINT SCSI CARD INFORMATION FOR AIX 5.1 & OLDER
+########################################################################################
+MAP_SCSI_CARD_AIX_51 ()
+{
+for i in `lsdev -Cc adapter|grep -i scsi|awk '{print $1}'`
+do
+SCSI_ADAPTER=$i
+SCSI_LOGICAL_LOC=`lscfg -vpl $SCSI_ADAPTER | awk '/scsi/ {print $2}'|sed -e '/scsi/d' -e '/Type/d'`
+SCSI_PHYSICAL_LOC=`lscfg -vpl $SCSI_ADAPTER|grep -i phys| awk '{print $3}'`
+SCSI_DEV_TYPE=`lscfg -vpl $SCSI_ADAPTER|grep scsi|sed -e '/Name/d' -e '/Node/d' -e '/Device/d' -e 's/I\/O//g'|awk '{print $3" "$4" "$5" "$6}'`
+printf "%-16s %-6s %-38s %-10s\n" "$SCSI_PHYSICAL_LOC" "$SCSI_LOGICAL_LOC" "$SCSI_DEV_TYPE" "$SCSI_ADAPTER"
+done
+			}
+#
+#######################################################################################
+# PRINT FIBER CARD INFORMATION FOR AIX 5.1 & OLDER
+#######################################################################################
+MAP_FIBER_CARD_AIX51 ()
+{
+for i in `lsdev -Cc adapter|grep -i fcs|awk '{print $1}'`
+do
+FIBER_ADAPTER=$i
+FIBER_PHYS_LOC=`lscfg -vpl $FIBER_ADAPTER|grep -i Phy|awk '{print $3}'`
+FIBER_CARD_MODEL=`lscfg -vpl $FIBER_ADAPTER|grep -i Model|awk '{print $2}'`
+FIBER_MAC_ADDRESS=`lscfg -vpl $FIBER_ADAPTER|grep -i network|awk '{print $2}'| sed -e 's/Address.............//'`
+printf "%-20s %-20s %-20s %-6s\n" "$FIBER_PHYS_LOC" "$FIBER_CARD_MODEL" "$FIBER_MAC_ADDRESS" "$FIBER_ADAPTER"
+done
+		}
+#
+##########################################################################################
+# MAP ETHERNET CARD INFORMATION FOR AIX 5.1 & OLDER
+##########################################################################################
+ETHERNET_AIX51 ()
+{
+for i in `lsdev -Cc adapter|grep -i en|awk '{print $1}'`
+do
+ETHERNET_ADAPTER=$i
+ETHERNET_PHYS=`lscfg -vpl $ETHERNET_ADAPTER|grep -i phys|awk '{print $3}'`
+ETHERNET_TYPE=`lscfg -vpl $ETHERNET_ADAPTER|grep -i ent|awk '{print $3" "$4" "$5" "$6}'|sed -e 's/10\/100\/1000/Gigabit/g' -e 's/IBM //g' -e 's/Base\-TX//g'`
+printf "%-30s %-30s %-6s\n" "$ETHERNET_PHYS" "$ETHERNET_TYPE" "$ETHERNET_ADAPTER"
+done
+	}
+#
+#
+#
+#
+
+#####################################################################################################
+#    M A I N   P R O G R A M
+#####################################################################################################
+
+echo "Now you will print the Current Map of this Server"
+echo "Go and check the network printer for the printout"
+#hostname >print.out
+PRINT_HOSTNAME ()
+{
+HOST_NAME=`hostname`
+printf "%-30s %-20s\n" "$NONE" "$HOST_NAME"
+}
+PRINT_HOSTNAME>print.out
+echo "*********************************************************************" >> print.out
+#date >>print.out
+echo "Printed on `date`" >> print.out
+echo "*********************************************************************" >> print.out
+echo "OS VERSION" `oslevel -r` >>print.out
+echo "*********************************************************************" >> print.out
+lsconf 1>/tmp/lsconf.MAP
+egrep "System Model" /tmp/lsconf.MAP 1>>print.out
+egrep "Number Of Processors" /tmp/lsconf.MAP 1>>print.out
+egrep "Good Memory Size" /tmp/lsconf.MAP 1>>print.out
+egrep "Firmware Version" /tmp/lsconf.MAP 1>>print.out
+echo >>print.out
+echo "Here are the internal disks currently installed in the system" >> print.out
+echo "*********************************************************************" >> print.out
+PRINTSCSIDISK >> print.out
+echo "*********************************************************************" >> print.out
+echo >> print.out
+PRINTCD >> print.out
+TAPEINFO >> print.out
+echo >>print.out
+echo "Here are the scsi cards installed in the system" >> print.out
+echo "*********************************************************************" >> print.out
+if [ $OSVER = 51 ]; then
+MAP_SCSI_CARD_AIX_51 >> print.out
+else
+PRINTSCSI >> print.out
+fi
+echo "*********************************************************************" >> print.out
+echo >> print.out
+echo "Here are the PCI ethernet cards installed in the system" >> print.out
+echo "*********************************************************************" >> print.out
+if [ $OSVER = 51 ]; then
+ETHERNET_AIX51 >> print.out
+else
+PRINTENT >> print.out
+fi
+echo "*********************************************************************" >> print.out
+echo >> print.out
+echo "Here are the fiber cards installed in the system" >> print.out
+echo "*********************************************************************" >> print.out
+if [ $OSVER = 51 ]; then
+MAP_FIBER_CARD_AIX51 >> print.out
+else
+PRINTFCS >> print.out
+fi
+echo "*********************************************************************" >> print.out
+echo >> print.out
+echo "Here are all other pci slots not listed above" >> print.out
+echo "*********************************************************************" >> print.out
+lsslot -c pci | egrep -iv 'scsi|ent|fcs' | awk '{print $1 "\t\t" $8" " $9}' >> print.out
+
+echo "*********************************************************************" >> print.out
+ftp -n 172.21.64.2 <<HEHE
+quote USER ftp
+quote PASS whoami@dontmess.com
+cd /pub/docs
+prompt
+mput print.out
+quit
+HEHE
+rsh 172.21.64.2 -l docs sudo lp /home/ftp/pub/docs/print.out
+sleep 5
+#rm print.out

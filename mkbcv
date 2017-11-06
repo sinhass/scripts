@@ -1,0 +1,179 @@
+#!/bin/ksh
+#
+######################################################################
+## mkbcv utility                                                    ##
+## Copyright (C) by EMC Corporation 1999,2000 all rights reserved.  ##
+## This utility supports Timefinder devices and Timefinder devices  ##
+## under PowerPath 2.x,3.x.                                         ##
+## krichards V2.0.0.3  06/12/02                                     ## 
+######################################################################
+#
+#
+#################################
+#                               #
+# Configure SCSI/FCSCSI devices #
+#                               #
+#################################
+LANG=C
+cfgscdevice()
+{
+	/etc/methods/cfgscdisk -l $BCV > /dev/null 2>&1
+	if [ $? -eq 0 ]
+                then    
+                        return 0
+                else
+                        return 1
+        fi
+}
+#########################
+#                       #
+# Configure FCP devices #
+#                       #
+#########################
+cfgfscsidevice()
+{
+	/etc/methods/cfgscsidisk -l $BCV > /dev/null 2>&1
+        if [ $? -eq 0 ]
+                then
+                        return 0
+                else
+                        return 1
+        fi
+}
+###############################
+#                             #
+# Configure PowerPath devices #
+#                             #
+###############################
+cfgpowerdevice()
+{
+/usr/sbin/cfgmgr -l powerpath0 > /dev/null 2>&1
+}
+##########################################
+# Test if PowerPath 2,3 is installed     #
+##########################################
+powerpathinstalled()
+{
+lslpp -l EMCpower.base > /dev/null 2>&1
+        if [ $? -eq 0 ]
+                then
+                        return 0
+                else
+                        return 1
+        fi
+}
+###################################
+#                                 #
+# List Defined Timefinder devices #
+#                                 #
+###################################
+SCSILIST=`lsdev -Ct*BCV -SD -F"name" -sscsi` 
+FSCSILIST=`lsdev -Ct*BCV -SD -F"name" -sfcp` 
+FCSCSILIST=`lsdev -Ct*BCV -SD -F"name" -sfcscsi` 
+PPLIST=`lsdev -Cc disk -t power -SD -F "name"`
+if (( "$#" < 1 ))
+then
+	echo "\n"
+	for BCV in $SCSILIST $FSCSILIST $FCSCSILIST $PPLIST
+	do
+		echo "TimeFinder: $BCV Defined"
+	done
+	echo "\nusage:\tmkbcv <-a> \n"
+	exit 0
+else
+
+#####################
+#                   #
+# Main for "bcv -a" #
+#                   #
+#####################
+if test "$1" = "-a"
+then
+if  ( powerpathinstalled -eq 0 )
+then
+	for BCV in $SCSILIST $FCSCSILIST
+	do
+		    if ( cfgscdevice -eq 0 ) ; then
+                    	echo "$BCV Available\n"
+                    	else
+    		    	pwr_devdisk=`odmget -q "value = $disk AND attribute = pnpath" CuAt | grep 'name' |cut -f2 -d '"'`
+    			PWRLIST="$pwr_devdisk"
+			mkdev -l $PWRLIST > /dev/null 2>&1
+		    	if ( cfgscdevice -eq 0 ) ; then
+                    	echo "$BCV Available\n"
+	            	else 	
+                    	echo "$BCV is in a undetermined state\n"
+                    	fi
+		    fi 
+	done
+	for BCV in $FSCSILIST 
+	do
+                    if ( cfgfscsidevice -eq 0 ) ; then
+                    	echo "$BCV Available\n"
+                    	else
+    			pwr_devdisk=`odmget -q "value = $BCV AND attribute = pnpath" CuAt | grep 'name' |cut -f2 -d '"'`
+    			PWRLIST="$pwr_devdisk"
+			mkdev -l $PWRLIST > /dev/null 2>&1
+		    	if ( cfgfscsidevice -eq 0 ) ; then
+                    	echo "$BCV Available\n"
+                    	else
+                    	echo "$BCV is in a undetermined state\n"
+                    	fi
+		    fi	
+	done
+	PPNEWLIST=`lsdev -Cc disk -t power -SD -F "name"`
+	for BCV in $PPNEWLIST  
+	do
+		    mkdev -l $BCV > /dev/null 2>&1
+		    BCVAVAIL=$(lsdev -Cc disk -l $BCV | awk '{print $2}')
+                    if [[ $BCVAVAIL = Available ]] ; then
+                    	echo "$BCV Available\n"
+                	else
+			cfgpowerdevice
+			BCVAVAIL=$(lsdev -Cc disk -l $BCV | awk '{print $2}')
+			if [[ $BCVAVAIL = Available ]] ; then
+			echo "$BCV Available\n"
+			else
+                	echo "$BCV Defined\n"
+                	fi
+		    fi
+	done
+###########################
+# Standard device support #
+###########################
+else
+for BCV in $SCSILIST $FCSCSILIST
+        do
+                    if ( cfgscdevice -eq 0 ) ; then
+                    echo "$BCV Available\n"
+                    else
+                    echo "$BCV is in a undetermined state\n"
+                    fi
+ 
+        done
+        
+        for BCV in $FSCSILIST 
+        do
+                    if ( cfgfscsidevice -eq 0 ) ; then
+                    echo "$BCV Available\n"
+                    else
+                    echo "$BCV is in a undetermined state\n"
+                    fi
+
+        done
+        
+        for BCV in $PPLIST
+        do
+                    if ( cfgpowerdevice -eq 0 ) ; then
+                    echo "$BCV Available\n"
+                    else
+                    echo "$BCV is in a undetermined state\n"
+                    fi
+
+        done
+fi
+else
+echo "\nError: 'mkbcv $1' not valid\n"
+    exit 2
+fi
+fi

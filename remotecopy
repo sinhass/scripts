@@ -1,0 +1,27 @@
+#!/usr/bin/ksh
+# Author  : Siddhartha S Sinha
+# Rev     : 1.0
+# Date    : 08/24/2009
+#
+HOSTS_TO_PING ()
+{
+if [ -z "/tmp/ping_result" ]; then
+cat /dev/null >/tmp/ping_result
+else
+ping -c 4 172.21.67.255 > /tmp/ping_result && cat /tmp/ping_result|grep ^64|awk '{print $4}'| sed -e 's/\://g'|sort -u >/tmp/PING_LIST
+fi
+}
+HOSTS_NOT_PING ()
+{
+cat /tmp/ping_result|grep ^64|awk '{print $4}'| sed -e 's/\://g'|sort -u|awk -F"." '$3 == 64 && $4 <10'>/tmp/DONT_PING
+}
+HOSTS_TO_PING
+HOSTS_NOT_PING
+comm  -3 /tmp/PING_LIST /tmp/DONT_PING >/tmp/IPS_TO_WORK
+echo "Please type the full path of the file you want to copy?:\c"
+read FILE_NAME
+cat /tmp/IPS_TO_WORK |while read IPS_TO_WORK
+do
+rcp -rp $FILE_NAME $IPS_TO_WORK:/utility
+sleep 1
+done 

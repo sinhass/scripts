@@ -1,0 +1,29 @@
+#!/usr/bin/ksh
+# 
+# Author      :  Siddhartha S Sinha
+# Audience    :  IBM BC&RS
+#
+#
+#
+PRINT_DISK_SUMMARY ()
+{
+for i in `lsdev -Cc disk -F name`
+do
+disk=$i
+DISKSZ=`bootinfo -s $disk`
+if [[ -z $ALLDISKSZ ]]
+then
+ALLDISKSZ="$DISKSZ"
+else
+ALLDISKSZ="$ALLDISKSZ\n$DISKSZ"
+fi
+done
+SIZES=$(print $ALLDISKSZ|sort -n|uniq)
+print "Here is the summary of all disks. Calculate depending on Paths"
+print "Total Nos/Paths of Disks\t\tSize (MB)\n-------------------------\t\t---------"
+for SIZE in $SIZES
+do NUM=$(print "$ALLDISKSZ"|grep -c ^"$SIZE"$)
+   printf "%-35s %-10s\n" "	$NUM" "$SIZE"
+done
+}
+PRINT_DISK_SUMMARY

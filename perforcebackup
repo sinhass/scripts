@@ -1,0 +1,32 @@
+#!/usr/bin/bash
+# Perforce backup script
+# Property of Barefoot Networks.
+PATH=/tools/perforce/2016.2/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin
+#P4ROOT=/perforce/p4root
+P4ROOT=/var/p4//p4root
+P4USER=svn
+P4BACKUPDEST=/perforcebk/backups
+P4COMMAND=/tools/perforce/2016.2/p4d -jc
+DATE=$(date +%m%d%y)
+MAILSENDER="italerts@barefootnetworks.com (Perforce Administrator)"
+#MAILRECEPIENT="italerts@barefootnetworks.com"
+MAILRECEPIENT="ssinha@barefootnetworks.com"
+FAIL_MESG=$(echo "Urgent message. Perforce Backup Failed. Please login to bfperforce01 and investigate.")
+SUSS_MESG=$(echo "Perforce backup to $P4BACKUPDEST completed.")
+JMESG=$(echo "Journal and checkpoint completed. Now will run rsync.")
+cd $P4ROOT
+CURRENTPATH=echo $pwd
+if [[ $CURRENTPATH == $P4ROOT ]]; then
+  sudo su - $P4USER -c $P4COMMAND  >/$P4BACKUPDEST/backuplog/PerforceBackup.$DATE.txt 2>&1
+  if [[ $? -eq o  ]]; then
+    cat /$P4BACKUPDEST/backuplog/PerforceBackup.$DATE.txt | \
+    mailx -s $(echo "$DATE $JMESG.") -r "$MAILSENDER"  "$MAILRECEPIENT"
+    rsync -rpvzau --exclude 'lost+found' $P4ROOT/ $P4BACKUPDEST/
+    if [[ $? -eq o  ]]; then
+      echo $SUSS_MESG | mailx -s "$SUSS_MESG for $DATE." -r $MAILSENDER  $MAILRECEPIENT
+  else
+    echo "$FAIL_MESG"|mailx -s "$SUSS_MESG for $DATE." -r $MAILSENDER  $MAILRECEPIENT
+  fi
+else
+  echo "Check the path and fix the script."
+fi
